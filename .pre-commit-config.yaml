@@ -1,0 +1,18 @@
+# .pre-commit-config.yaml
+default_stages: [pre-commit]
+default_install_hook_types: [pre-commit, commit-msg, pre-push]
+default_language_version:
+  python: python3.13
+# Copyright 2025, EOX (https://eox.at) and Versioneer (https://versioneer.at)
+# SPDX-License-Identifier: Apache-2.0
+
+repos:
+  - repo: local
+    hooks:
+      - id: copyright-header
+        name: Copyright header
+        entry: ./scripts/copyright.py
+        language: system
+        types_or: [yaml, python]      # <- 'python', not 'py'
+        files: \.(ya?ml|py)$          # explicit file match is handy
+        pass_filenames: true
