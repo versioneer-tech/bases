@@ -120,7 +120,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: csi-rclone-controller
-    # namespace injected by Kustomize overlay
+    namespace: ${NAMESPACE}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -133,7 +133,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: csi-rclone-controller
-    # namespace injected by Kustomize overlay
+    namespace: ${NAMESPACE}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -146,13 +146,12 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: csi-rclone-nodeplugin
-    # namespace injected by Kustomize overlay
+    namespace: ${NAMESPACE}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: csi-rclone-external-provisioner-cfg
-  # namespace injected by Kustomize overlay
 rules:
   - apiGroups: [""]
     resources: ["endpoints"]
@@ -171,7 +170,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: csi-rclone-provisioner-role-cfg
-  # namespace injected by Kustomize overlay
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -179,7 +177,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: csi-rclone-controller
-    # namespace injected by Kustomize overlay
+    namespace: ${NAMESPACE}
 ---
 apiVersion: apps/v1
 kind: DaemonSet
@@ -248,7 +246,8 @@ spec:
           securityContext:
             allowPrivilegeEscalation: true
             privileged: true
-            capabilities: { add: ["SYS_ADMIN"] }
+            capabilities:
+              add: ["SYS_ADMIN"]
           ports:
             - containerPort: 9808
               name: healthz
@@ -314,7 +313,10 @@ spec:
         - name: csi-provisioner
           image: registry.k8s.io/sig-storage/csi-provisioner:v5.1.0
           imagePullPolicy: IfNotPresent
-          args: ["--csi-address=$(ADDRESS)","--capacity-ownerref-level=0","--extra-create-metadata"]
+          args:
+            - --csi-address=$(ADDRESS)
+            - --capacity-ownerref-level=0
+            - --extra-create-metadata
           env:
             - { name: ADDRESS, value: "/csi/csi.sock" }
             - { name: NAMESPACE, valueFrom: { fieldRef: { fieldPath: metadata.namespace } } }
@@ -358,7 +360,7 @@ spec:
 apiVersion: storage.k8s.io/v1
 kind: CSIDriver
 metadata:
-  name: csi-rclone-driver
+  name: csi-rclone
 spec:
   attachRequired: true
   podInfoOnMount: false

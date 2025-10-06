@@ -1,0 +1,47 @@
+# Copyright 2025, EOX (https://eox.at) and Versioneer (https://versioneer.at)
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../default
+
+patches:
+  - target:
+      group: apps
+      version: v1
+      kind: DaemonSet
+      name: csi-rclone-nodeplugin
+    patch: |
+      apiVersion: apps/v1
+      kind: DaemonSet
+      metadata:
+        name: csi-rclone-nodeplugin
+      spec:
+        template:
+          spec:
+            volumes:
+              - name: plugin-dir
+                hostPath:
+                  path: ${KUBELET_PATH}/plugins/csi-rclone
+                  type: DirectoryOrCreate
+              - name: pods-mount-dir
+                hostPath:
+                  path: ${KUBELET_PATH}/pods
+                  type: Directory
+              - name: registration-dir
+                hostPath:
+                  path: ${KUBELET_PATH}/plugins_registry
+                  type: DirectoryOrCreate
+            containers:
+              - name: node-driver-registrar
+                args:
+                  - --v=5
+                  - --csi-address=/plugin/csi.sock
+                  - --kubelet-registration-path=${KUBELET_PATH}/plugins/csi-rclone/csi.sock
+              - name: rclone
+                volumeMounts:
+                  - name: pods-mount-dir
+                    mountPath: ${KUBELET_PATH}/pods
+                    mountPropagation: Bidirectional

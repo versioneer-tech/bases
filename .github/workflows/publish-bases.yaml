@@ -1,4 +1,7 @@
-name: publish-bases
+# Copyright 2025, EOX (https://eox.at) and Versioneer (https://versioneer.at)
+# SPDX-License-Identifier: Apache-2.0
+
+name: Publish Bases to GHCR
 
 on:
   push:
@@ -9,54 +12,36 @@ permissions:
   contents: read
   packages: write
 
-env:
-  REGISTRY: ghcr.io
-  ORG: ${{ github.repository_owner }}
-
 jobs:
   publish:
     runs-on: ubuntu-latest
+    env:
+      IMAGE: ghcr.io/${{ github.repository_owner }}/bases
+      OWNER: ${{ github.repository_owner }}
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 2
 
-      - uses: oras-project/setup-oras@v1
-      - run: sudo apt-get update && sudo apt-get install -y jq
-
-      - uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: publish changed folders
-        env:
-          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COMMIT_SHA: ${{ github.sha }}
-        shell: bash
+      - name: Install Flux CLI
         run: |
-          set -euo pipefail
-          if git rev-parse HEAD^ >/dev/null 2>&1; then PREV=HEAD^; else PREV=; fi
-          TAG="git-${COMMIT_SHA:0:12}"
-          for d in */; do
-            [ -d "$d" ] || continue
-            f="${d%/}"
-            [ -f "$f/kustomization.yaml" ] || continue
-            if [ -n "$PREV" ] && git diff --quiet "$PREV"..HEAD -- "$f"; then
-              echo "skip $f"; continue
-            fi
-            IMAGE="${REGISTRY}/${ORG}/bases/${f}"
-            if curl -fsS -H "Authorization: Bearer $GHCR_TOKEN" "https://ghcr.io/v2/${ORG}/bases/${f}/tags/list" | jq -e --arg t "$TAG" '.tags // [] | index($t)' >/dev/null; then
-              echo "exists $IMAGE:$TAG"; continue
-            fi
-            mapfile -t FILES < <(find "$f" -maxdepth 1 -type f \( -name '*.yaml' -o -name '*.yml' \) -print | sort)
-            [ "${#FILES[@]}" -gt 0 ] || { echo "no yaml in $f"; continue; }
-            ARGS=()
-            for x in "${FILES[@]}"; do ARGS+=("${x}:text/yaml"); done
-            oras push "$IMAGE:$TAG" "${ARGS[@]}" \
-              --annotation "org.opencontainers.image.title=$f" \
-              --annotation "org.opencontainers.image.version=$TAG" \
-              --annotation "org.opencontainers.image.revision=${COMMIT_SHA}" \
-              --annotation "org.opencontainers.image.source=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
-          done
+          set -eux
+          curl -s https://fluxcd.io/install.sh | sudo bash
+          flux --version
+
+      - name: Authenticate to GHCR
+        env:
+          CR_PAT: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$CR_PAT" | docker login ghcr.io -u "${OWNER}" --password-stdin
+
+      - name: Make script executable
+        run: chmod +x ./publish-bases.sh
+
+      - name: Publish changed bases via Flux OCI
+        env:
+          IMAGE: ${{ env.IMAGE }}
+          OWNER: ${{ env.OWNER }}
+        run: ./publish-bases.sh

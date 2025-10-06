@@ -1,0 +1,1836 @@
+# Copyright 2025, EOX (https://eox.at) and Versioneer (https://versioneer.at)
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v1
+kind: Secret
+metadata:
+  annotations: {}
+  name: educates-config
+stringData:
+  educates-operator-config.yaml: |
+    ---
+    clusterIngress:
+      caCertificate:
+        ca.crt: ""
+      caCertificateRef:
+        name: ""
+        namespace: ""
+      caNodeInjector:
+        enabled: false
+      class: ${CLUSTER_INGRESS_CLASS}
+      domain: ${CLUSTER_INGRESS_DOMAIN}
+      protocol: ""
+      tlsCertificate:
+        tls.crt: ""
+        tls.key: ""
+      tlsCertificateRef:
+        name: ${TLS_CERTIFICATE_REF_NAME}
+        namespace: ${TLS_CERTIFICATE_REF_NAMESPACE}
+    clusterNetwork:
+      blockCIDRs:
+      - 169.254.169.254/32
+      - fd00:ec2::254/128
+    clusterRuntime:
+      class: ""
+    clusterSecrets:
+      pullSecretRefs: []
+    clusterSecurity:
+      policyEngine: none
+    clusterStorage:
+      class: ""
+      group: 1
+      user: null
+    dockerDaemon:
+      networkMTU: 1400
+      proxyCache:
+        password: ""
+        remoteURL: ""
+        username: ""
+    imagePuller:
+      enabled: true
+      prePullImages:
+      - base-environment
+    imageRegistry: null
+    imageVersions:
+    - image: index.docker.io/library/debian@sha256:25095ed790e32ed43236eb0c793a9959deda9d623bd527aa44a11d51c371397f
+      name: debian-base-image
+    - image: index.docker.io/library/docker@sha256:aa3df78ecf320f5fafdce71c659f1629e96e9de0968305fe1de670e0ca9176ce
+      name: docker-in-docker
+    - image: index.docker.io/rancher/k3s@sha256:2713528633c2d4ebebd8efc230aae45e925843b7bfd30ce6a99eabc9b2dbb469
+      name: rancher-k3s-v1.27
+    - image: index.docker.io/rancher/k3s@sha256:2006d64b91f174717ef251ad5da83464fefd0e0acb9e0104bf0406a45b89050f
+      name: rancher-k3s-v1.28
+    - image: index.docker.io/rancher/k3s@sha256:4c448f219e2296ad15317665a80c9923f95783160207b9b972c1ec8365cdbe8f
+      name: rancher-k3s-v1.29
+    - image: index.docker.io/rancher/k3s@sha256:09e019280cdc89d038644f1656ac7f2aed98807bd97c20e2dc1b5b9f534a0718
+      name: rancher-k3s-v1.30
+    - image: index.docker.io/loftsh/vcluster@sha256:8a5a517af259461fb1b19aaf2826753b136799f6137ff9b342ef787fa3cec013
+      name: loftsh-vcluster
+    - image: ghcr.io/educates/educates-session-manager@sha256:1d4962e37e471e490c9e611a9550e755b36fd512eca6e95b75ed6d26810afc0b
+      name: session-manager
+    - image: ghcr.io/educates/educates-training-portal@sha256:ad8568c12eca9ed612773eec21c206477714e98f2c406e6da832f072b9dba8b0
+      name: training-portal
+    - image: ghcr.io/educates/educates-docker-registry@sha256:1beda027a9a6cd3e5804c7eb0b4a06b017c653d8cdb247e4a468087f21f8bcff
+      name: docker-registry
+    - image: ghcr.io/educates/educates-pause-container@sha256:9c1994329d727fb9191fbd7d079d86c32d0a480090c9fc2766926e1879556395
+      name: pause-container
+    - image: ghcr.io/educates/educates-base-environment@sha256:f5450978a161f725329b179b28b04b492973e7bc2c30c6fbb820a43876f56608
+      name: base-environment
+    - image: ghcr.io/educates/educates-jdk8-environment@sha256:0589012a01a9ef1284944ce0a19c1dc0dd0e6c410a0a2793626c0a232577e380
+      name: jdk8-environment
+    - image: ghcr.io/educates/educates-jdk11-environment@sha256:15e512b6203f7d6eebbc101d8221dcca210b1a24723d6f10529c6d341304c44a
+      name: jdk11-environment
+    - image: ghcr.io/educates/educates-jdk17-environment@sha256:3ee54057c5b6fe4a6d62c7660601eafb2eb8fb890a1ce31cb2568db8ae352c1e
+      name: jdk17-environment
+    - image: ghcr.io/educates/educates-jdk21-environment@sha256:e5621d0f4cecb9edfda9ab94d127ae904babf25a306808104f260ced9a843cb3
+      name: jdk21-environment
+    - image: ghcr.io/educates/educates-conda-environment@sha256:4fd9db80cf3a1497f6161cee422cf05aa3e4c4ffbd9c000e23510544915b8b48
+      name: conda-environment
+    - image: ghcr.io/educates/educates-secrets-manager@sha256:6de14a95ec141e2008754dfa64171c8113db479d50d0aad1d4a8b0cafff82953
+      name: secrets-manager
+    - image: ghcr.io/educates/educates-tunnel-manager@sha256:3ace6dbe1953ca485d6c92d6ca3d0ec3760126154169d85a70826fb9bddd933f
+      name: tunnel-manager
+    - image: ghcr.io/educates/educates-image-cache@sha256:974d0c5f6a92fe8e0ff839680e4dc3e9570390f2f61d32d488fb8bacd6bb050e
+      name: image-cache
+    - image: ghcr.io/educates/educates-assets-server@sha256:2a7162091b6104e3956e931dcad6b9f2976fbfd924419cf7e840f1ea7667f9af
+      name: assets-server
+    - image: ghcr.io/educates/educates-lookup-service@sha256:9534ae921a37aef2dc6affd8caa1b1a99eec249a7f3d43353e0b73e670d1ed31
+      name: lookup-service
+    - image: index.docker.io/library/debian@sha256:25095ed790e32ed43236eb0c793a9959deda9d623bd527aa44a11d51c371397f
+      name: debian-base-image
+    - image: index.docker.io/library/docker@sha256:aa3df78ecf320f5fafdce71c659f1629e96e9de0968305fe1de670e0ca9176ce
+      name: docker-in-docker
+    - image: index.docker.io/rancher/k3s@sha256:2713528633c2d4ebebd8efc230aae45e925843b7bfd30ce6a99eabc9b2dbb469
+      name: rancher-k3s-v1.27
+    - image: index.docker.io/rancher/k3s@sha256:2006d64b91f174717ef251ad5da83464fefd0e0acb9e0104bf0406a45b89050f
+      name: rancher-k3s-v1.28
+    - image: index.docker.io/rancher/k3s@sha256:4c448f219e2296ad15317665a80c9923f95783160207b9b972c1ec8365cdbe8f
+      name: rancher-k3s-v1.29
+    - image: index.docker.io/rancher/k3s@sha256:09e019280cdc89d038644f1656ac7f2aed98807bd97c20e2dc1b5b9f534a0718
+      name: rancher-k3s-v1.30
+    - image: index.docker.io/loftsh/vcluster@sha256:8a5a517af259461fb1b19aaf2826753b136799f6137ff9b342ef787fa3cec013
+      name: loftsh-vcluster
+    lookupService:
+      enabled: false
+      ingressPrefix: educates-api
+    operator:
+      apiGroup: educates.dev
+      namePrefix: educates
+      namespace: ${NAMESPACE}
+      statusKey: educates
+    sessionCookies:
+      domain: ""
+    trainingPortal:
+      clients:
+        robot:
+          id: null
+          secret: null
+      credentials:
+        admin:
+          password: null
+          username: educates
+        robot:
+          password: null
+          username: robot@educates
+    version: latest
+    websiteStyling:
+      defaultTheme: ""
+      frameAncestors: []
+      themeDataRefs: []
+      trainingPortal:
+        html: ""
+        script: ""
+        style: ""
+      workshopDashboard:
+        html: ""
+        script: ""
+        style: ""
+      workshopFinished:
+        html: ""
+      workshopInstructions:
+        html: ""
+        script: ""
+        style: ""
+      workshopStarted:
+        html: ""
+    workshopAnalytics:
+      amplitude:
+        trackingId: ""
+      clarity:
+        trackingId: ""
+      google:
+        trackingId: ""
+      webhook:
+        url: ""
+    workshopSecurity:
+      rulesEngine: none
+  kyverno-policies.yaml: |
+    apiVersion: kyverno.io/v1
+    kind: ClusterPolicy
+    metadata:
+      name: require-ingress-session-name
+    spec:
+      validationFailureAction: enforce
+      background: true
+      rules:
+      - name: require-ingress-session-name
+        match:
+          resources:
+            kinds:
+            - Ingress
+        context:
+        - name: session_namespace
+          apiCall:
+            urlPath: /api/v1/namespaces/{{request.namespace}}
+            jmesPath: metadata.labels."training.educates.dev/session.name" || '@'
+        preconditions:
+          all:
+          - key: '{{ request.operation }}'
+            operator: AnyIn
+            value:
+            - CREATE
+            - UPDATE
+        validate:
+          message: Ingress host name must embed the workshop session name.
+          foreach:
+          - list: request.object.spec.rules
+            deny:
+              conditions:
+                any:
+                - key: '{{ contains(element.host, session_namespace) }}'
+                  operator: NotEquals
+                  value: true
+    ---
+    apiVersion: kyverno.io/v1
+    kind: ClusterPolicy
+    metadata:
+      name: disallow-container-sock-mounts
+      annotations:
+        policies.kyverno.io/title: Disallow CRI socket mounts in CEL expressions
+        policies.kyverno.io/category: Best Practices, EKS Best Practices in CEL
+        policies.kyverno.io/severity: medium
+        policies.kyverno.io/subject: Pod
+        policies.kyverno.io/minversion: 1.11.0
+        kyverno.io/kubernetes-version: 1.26-1.27
+        policies.kyverno.io/description: Container daemon socket bind mounts allows access to the container engine on the node. This access can be used for privilege escalation and to manage containers outside of Kubernetes, and hence should not be allowed. This policy validates that the sockets used for CRI engines Docker, Containerd, and CRI-O are not used. In addition to or replacement of this policy, preventing users from mounting the parent directories (/var/run and /var) may be necessary to completely prevent socket bind mounts.
+    spec:
+      validationFailureAction: Audit
+      background: true
+      rules:
+      - name: validate-socket-mounts
+        match:
+          any:
+          - resources:
+              kinds:
+              - Pod
+              operations:
+              - CREATE
+              - UPDATE
+        validate:
+          cel:
+            variables:
+            - name: hasVolumes
+              expression: '!has(object.spec.volumes)'
+            - name: volumes
+              expression: object.spec.volumes
+            - name: volumesWithHostPath
+              expression: variables.volumes.filter(volume, has(volume.hostPath))
+            expressions:
+            - expression: variables.hasVolumes ||  variables.volumesWithHostPath.all(volume, !volume.hostPath.path.matches('/var/run/docker.sock'))
+              message: Use of the Docker Unix socket is not allowed.
+            - expression: variables.hasVolumes ||  variables.volumesWithHostPath.all(volume, !volume.hostPath.path.matches('/var/run/containerd/containerd.sock'))
+              message: Use of the Containerd Unix socket is not allowed.
+            - expression: variables.hasVolumes ||  variables.volumesWithHostPath.all(volume, !volume.hostPath.path.matches('/var/run/crio/crio.sock'))
+              message: Use of the CRI-O Unix socket is not allowed.
+            - expression: variables.hasVolumes ||  variables.volumesWithHostPath.all(volume, !volume.hostPath.path.matches('/var/run/cri-dockerd.sock'))
+              message: Use of the Docker CRI socket is not allowed.
+    ---
+    apiVersion: kyverno.io/v1
+    kind: ClusterPolicy
+    metadata:
+      name: disallow-empty-ingress-host
+      annotations:
+        policies.kyverno.io/title: Disallow empty Ingress host in CEL expressions
+        policies.kyverno.io/category: Best Practices in CEL
+        policies.kyverno.io/minversion: 1.11.0
+        kyverno.io/kubernetes-version: 1.26-1.27
+        policies.kyverno.io/severity: medium
+        policies.kyverno.io/subject: Ingress
+        policies.kyverno.io/description: An ingress resource needs to define an actual host name in order to be valid. This policy ensures that there is a hostname for each rule defined.
+    spec:
+      validationFailureAction: Audit
+      background: false
+      rules:
+      - name: disallow-empty-ingress-host
+        match:
+          any:
+          - resources:
+              kinds:
+              - Ingress
+              operations:
+              - CREATE
+              - UPDATE
+        validate:
+          cel:
+            expressions:
+            - expression: object.spec.?rules.orValue([]).all(rule, has(rule.host) && has(rule.http))
+              message: The Ingress host name must be defined, not empty.
+    ---
+    apiVersion: kyverno.io/v1
+    kind: ClusterPolicy
+    metadata:
+      name: restrict-nodeport
+      annotations:
+        policies.kyverno.io/title: Disallow NodePort in CEL expressions
+        policies.kyverno.io/category: Best Practices in CEL
+        policies.kyverno.io/minversion: 1.11.0
+        kyverno.io/kubernetes-version: 1.26-1.27
+        policies.kyverno.io/severity: medium
+        policies.kyverno.io/subject: Service
+        policies.kyverno.io/description: A Kubernetes Service of type NodePort uses a host port to receive traffic from any source. A NetworkPolicy cannot be used to control traffic to host ports. Although NodePort Services can be useful, their use must be limited to Services with additional upstream security checks. This policy validates that any new Services do not use the `NodePort` type.
+    spec:
+      validationFailureAction: Audit
+      background: true
+      rules:
+      - name: validate-nodeport
+        match:
+          any:
+          - resources:
+              kinds:
+              - Service
+              operations:
+              - CREATE
+              - UPDATE
+        validate:
+          cel:
+            expressions:
+            - expression: 'has(object.spec.type) ? (object.spec.type != ''NodePort'') : true'
+              message: Services of type NodePort are not allowed.
+    ---
+    apiVersion: kyverno.io/v1
+    kind: ClusterPolicy
+    metadata:
+      name: restrict-external-ips
+      annotations:
+        policies.kyverno.io/title: Restrict External IPs in CEL expressions
+        policies.kyverno.io/category: Best Practices in CEL
+        policies.kyverno.io/minversion: 1.11.0
+        kyverno.io/kubernetes-version: 1.26-1.27
+        policies.kyverno.io/severity: medium
+        policies.kyverno.io/subject: Service
+        policies.kyverno.io/description: 'Service externalIPs can be used for a MITM attack (CVE-2020-8554). Restrict externalIPs or limit to a known set of addresses. See: https://github.com/kyverno/kyverno/issues/1367. This policy validates that the `externalIPs` field is not set on a Service.'
+    spec:
+      validationFailureAction: Audit
+      background: true
+      rules:
+      - name: check-ips
+        match:
+          any:
+          - resources:
+              kinds:
+              - Service
+              operations:
+              - CREATE
+              - UPDATE
+        validate:
+          cel:
+            expressions:
+            - expression: '!has(object.spec.externalIPs)'
+              message: externalIPs are not allowed.
+    ---
+    apiVersion: kyverno.io/v1
+    kind: ClusterPolicy
+    metadata:
+      name: disallow-ingress-nginx-custom-snippets
+      annotations:
+        policies.kyverno.io/title: Disallow Custom Snippets in CEL expressions
+        policies.kyverno.io/category: Security, NGINX Ingress in CEL
+        policies.kyverno.io/subject: ConfigMap, Ingress
+        policies.kyverno.io/minversion: 1.11.0
+        kyverno.io/kyverno-version: 1.11.0
+        kyverno.io/kubernetes-version: 1.26-1.27
+        policies.kyverno.io/description: 'Users that can create or update ingress objects can use the custom snippets  feature to obtain all secrets in the cluster (CVE-2021-25742). This policy  disables allow-snippet-annotations in the ingress-nginx configuration and  blocks *-snippet annotations on an Ingress. See: https://github.com/kubernetes/ingress-nginx/issues/7837'
+    spec:
+      validationFailureAction: Enforce
+      rules:
+      - name: check-config-map
+        match:
+          any:
+          - resources:
+              kinds:
+              - ConfigMap
+              operations:
+              - CREATE
+              - UPDATE
+        validate:
+          cel:
+            expressions:
+            - expression: object.?data[?'allow-snippet-annotations'].orValue('false') == 'false'
+              message: ingress-nginx allow-snippet-annotations must be set to false
+      - name: check-ingress-annotations
+        match:
+          any:
+          - resources:
+              kinds:
+              - networking.k8s.io/v1/Ingress
+              operations:
+              - CREATE
+              - UPDATE
+        validate:
+          cel:
+            expressions:
+            - expression: '!object.metadata.?annotations.orValue([]).exists(annotation, annotation.endsWith(''-snippet''))'
+              message: ingress-nginx custom snippets are not allowed
+    ---
+    apiVersion: kyverno.io/v1
+    kind: ClusterPolicy
+    metadata:
+      name: restrict-annotations
+      annotations:
+        policies.kyverno.io/title: Restrict NGINX Ingress annotation values in CEL expressions
+        policies.kyverno.io/category: Security, NGINX Ingress in CEL
+        policies.kyverno.io/severity: high
+        policies.kyverno.io/subject: Ingress
+        policies.kyverno.io/minversion: 1.11.0
+        kyverno.io/kyverno-version: 1.11.0
+        kyverno.io/kubernetes-version: 1.26-1.27
+        policies.kyverno.io/description: 'This policy mitigates CVE-2021-25746 by restricting `metadata.annotations` to safe values. See: https://github.com/kubernetes/ingress-nginx/blame/main/internal/ingress/inspector/rules.go. This issue has been fixed in NGINX Ingress v1.2.0. For NGINX Ingress version 1.0.5+ the  "annotation-value-word-blocklist" configuration setting is also recommended.  Please refer to the CVE for details. '
+    spec:
+      validationFailureAction: Enforce
+      rules:
+      - name: check-ingress
+        match:
+          any:
+          - resources:
+              kinds:
+              - networking.k8s.io/v1/Ingress
+              operations:
+              - CREATE
+              - UPDATE
+        validate:
+          cel:
+            expressions:
+            - expression: |-
+                !has(object.metadata.annotations) || (
+                  !object.metadata.annotations.exists(annotation, object.metadata.annotations[annotation].matches('\\s*alias\\s*.*;')) &&
+                  !object.metadata.annotations.exists(annotation, object.metadata.annotations[annotation].matches('\\s*root\\s*.*;')) &&
+                  !object.metadata.annotations.exists(annotation, object.metadata.annotations[annotation].matches('/etc/(passwd|shadow|group|nginx|ingress-controller)')) &&
+                  !object.metadata.annotations.exists(annotation, object.metadata.annotations[annotation].matches('/var/run/secrets')) &&
+                  !object.metadata.annotations.exists(annotation, object.metadata.annotations[annotation].matches('.*_by_lua.*'))
+                )
+              message: spec.rules[].http.paths[].path value is not allowed
+    ---
+    apiVersion: kyverno.io/v1
+    kind: ClusterPolicy
+    metadata:
+      name: restrict-ingress-paths
+      annotations:
+        policies.kyverno.io/title: Restrict NGINX Ingress path values in CEL expressions
+        policies.kyverno.io/category: Security, NGINX Ingress in CEL
+        policies.kyverno.io/severity: high
+        policies.kyverno.io/subject: Ingress
+        policies.kyverno.io/minversion: 1.11.0
+        kyverno.io/kyverno-version: 1.11.0
+        kyverno.io/kubernetes-version: 1.26-1.27
+        policies.kyverno.io/description: This policy mitigates CVE-2021-25745 by restricting `spec.rules[].http.paths[].path` to safe values. Additional paths can be added as required. This issue has been fixed in NGINX Ingress v1.2.0.  Please refer to the CVE for details.
+    spec:
+      validationFailureAction: Enforce
+      rules:
+      - name: check-paths
+        match:
+          any:
+          - resources:
+              kinds:
+              - networking.k8s.io/v1/Ingress
+              operations:
+              - CREATE
+              - UPDATE
+        validate:
+          cel:
+            expressions:
+            - expression: object.spec.?rules.orValue([]).all(rule,  rule.?http.?paths.orValue([]).all(p,  !p.path.contains('/etc') && !p.path.contains('/var/run/secrets') && !p.path.contains('/root') && !p.path.contains('/var/run/kubernetes/serviceaccount') && !p.path.contains('/etc/kubernetes/admin.conf')))
+              message: spec.rules[].http.paths[].path value is not allowed
+    ---
+    apiVersion: kyverno.io/v1
+    kind: ClusterPolicy
+    metadata:
+      name: no-localhost-service
+      annotations:
+        policies.kyverno.io/title: Disallow Localhost ExternalName Services in CEL expressions
+        policies.kyverno.io/category: Sample in CEL
+        policies.kyverno.io/severity: medium
+        policies.kyverno.io/subject: Service
+        policies.kyverno.io/minversion: 1.11.0
+        kyverno.io/kubernetes-version: 1.26-1.27
+        policies.kyverno.io/description: A Service of type ExternalName which points back to localhost can potentially be used to exploit vulnerabilities in some Ingress controllers. This policy audits Services of type ExternalName if the externalName field refers to localhost.
+    spec:
+      validationFailureAction: Audit
+      background: true
+      rules:
+      - name: no-localhost-service
+        match:
+          any:
+          - resources:
+              kinds:
+              - Service
+              operations:
+              - CREATE
+              - UPDATE
+        validate:
+          cel:
+            expressions:
+            - expression: object.spec.type != 'ExternalName' || object.spec.externalName != 'localhost'
+              message: Service of type ExternalName cannot point to localhost.
+    ---
+    apiVersion: kyverno.io/v1
+    kind: ClusterPolicy
+    metadata:
+      name: prevent-cr8escape
+      annotations:
+        policies.kyverno.io/title: Prevent cr8escape (CVE-2022-0811) in CEL expressions
+        policies.kyverno.io/category: Other in CEL
+        policies.kyverno.io/severity: high
+        kyverno.io/kyverno-version: 1.11.0
+        policies.kyverno.io/minversion: 1.11.0
+        kyverno.io/kubernetes-version: 1.26-1.27
+        policies.kyverno.io/subject: Pod
+        policies.kyverno.io/description: A vulnerability "cr8escape" (CVE-2022-0811) in CRI-O the container runtime engine underpinning Kubernetes allows attackers to escape from a Kubernetes container and gain root access to the host. The recommended remediation is to disallow sysctl settings with + or = in their value.
+    spec:
+      validationFailureAction: Enforce
+      background: true
+      rules:
+      - name: restrict-sysctls-cr8escape
+        match:
+          any:
+          - resources:
+              kinds:
+              - Pod
+              operations:
+              - CREATE
+              - UPDATE
+        validate:
+          cel:
+            expressions:
+            - expression: 'object.spec.?securityContext.?sysctls.orValue([]).all(sysctl,  !has(sysctl.value) || (!sysctl.value.contains(''+'') && !sysctl.value.contains(''=''))) '
+              message: characters '+' or '=' are not allowed in sysctls values
+    ---
+    apiVersion: kyverno.io/v1
+    kind: ClusterPolicy
+    metadata:
+      name: no-loadbalancer-service
+      annotations:
+        policies.kyverno.io/title: Disallow Service Type LoadBalancer in CEL expressions
+        policies.kyverno.io/category: Sample in CEL
+        policies.kyverno.io/severity: medium
+        policies.kyverno.io/subject: Service
+        policies.kyverno.io/minversion: 1.11.0
+        kyverno.io/kubernetes-version: 1.26-1.27
+        policies.kyverno.io/description: Especially in cloud provider environments, a Service having type LoadBalancer will cause the provider to respond by creating a load balancer somewhere in the customer account. This adds cost and complexity to a deployment. Without restricting this ability, users may easily overrun established budgets and security practices set by the organization. This policy restricts use of the Service type LoadBalancer.
+    spec:
+      validationFailureAction: Audit
+      background: true
+      rules:
+      - name: no-LoadBalancer
+        match:
+          any:
+          - resources:
+              kinds:
+              - Service
+              operations:
+              - CREATE
+              - UPDATE
+        validate:
+          cel:
+            expressions:
+            - expression: object.spec.type != 'LoadBalancer'
+              message: Service of type LoadBalancer is not allowed.
+---
+apiVersion: v1
+data:
+  training-portal.css: ""
+  training-portal.html: ""
+  training-portal.js: ""
+  workshop-dashboard.css: ""
+  workshop-dashboard.html: ""
+  workshop-dashboard.js: ""
+  workshop-finished.html: ""
+  workshop-instructions.css: ""
+  workshop-instructions.html: ""
+  workshop-instructions.js: ""
+  workshop-started.html: ""
+kind: Secret
+metadata:
+  annotations: {}
+  name: default-website-theme
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  annotations: {}
+  name: educates-remote-access
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: educates-remote-access
+subjects:
+  - kind: ServiceAccount
+    name: remote-access
+    namespace: ${NAMESPACE}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations: {}
+  name: educates-remote-access
+rules:
+  - apiGroups:
+      - training.educates.dev
+    resources:
+      - trainingportals
+      - workshopenvironments
+      - workshopsessions
+      - workshopallocations
+      - workshops
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - get
+      - list
+      - watch
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  annotations:
+    kubernetes.io/service-account.name: remote-access
+  name: remote-access-token
+type: kubernetes.io/service-account-token
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations: {}
+  name: remote-access
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations: {}
+  name: educates-secrets-manager
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - serviceaccounts
+    verbs:
+      - get
+      - list
+      - watch
+      - patch
+      - update
+  - apiGroups:
+      - secrets.educates.dev
+    resources:
+      - secretcopiers
+      - secretexporters
+      - secretimporters
+      - secretinjectors
+    verbs:
+      - get
+      - list
+      - watch
+      - patch
+      - update
+  - apiGroups:
+      - secrets.educates.dev
+    resources:
+      - secretcopiers/finalizers
+      - secretimporters/finalizers
+    verbs:
+      - update
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations: {}
+  name: secrets-manager
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  annotations: {}
+  name: educates-secrets-manager
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: educates-secrets-manager
+subjects:
+  - kind: ServiceAccount
+    name: secrets-manager
+    namespace: ${NAMESPACE}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  annotations:
+    kubernetes.io/service-account.name: secrets-manager
+  name: secrets-manager-token
+type: kubernetes.io/service-account-token
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations: {}
+  name: secrets-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: secrets-manager
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        deployment: secrets-manager
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - image: ghcr.io/educates/educates-secrets-manager@sha256:6de14a95ec141e2008754dfa64171c8113db479d50d0aad1d4a8b0cafff82953
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthz?probe=liveness
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: operator
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          startupProbe:
+            failureThreshold: 4
+            httpGet:
+              path: /healthz?probe=startup
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          volumeMounts:
+            - mountPath: /opt/app-root/config/
+              name: config
+            - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+              name: token
+              readOnly: true
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+      serviceAccountName: secrets-manager
+      volumes:
+        - name: config
+          secret:
+            secretName: educates-config
+        - name: token
+          secret:
+            secretName: secrets-manager-token
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations: {}
+  name: educates-view-session-role
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - endpoints
+      - persistentvolumeclaims
+      - persistentvolumeclaims/status
+      - pods
+      - replicationcontrollers
+      - replicationcontrollers/scale
+      - serviceaccounts
+      - services
+      - services/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - bindings
+      - events
+      - limitranges
+      - namespaces/status
+      - pods/log
+      - pods/status
+      - replicationcontrollers/status
+      - resourcequotas
+      - resourcequotas/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - apps
+    resources:
+      - controllerrevisions
+      - daemonsets
+      - daemonsets/status
+      - deployments
+      - deployments/scale
+      - deployments/status
+      - replicasets
+      - replicasets/scale
+      - replicasets/status
+      - statefulsets
+      - statefulsets/scale
+      - statefulsets/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - autoscaling
+    resources:
+      - horizontalpodautoscalers
+      - horizontalpodautoscalers/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - batch
+    resources:
+      - cronjobs
+      - cronjobs/status
+      - jobs
+      - jobs/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - daemonsets
+      - daemonsets/status
+      - deployments
+      - deployments/scale
+      - deployments/status
+      - ingresses
+      - ingresses/status
+      - replicasets
+      - replicasets/scale
+      - replicasets/status
+      - replicationcontrollers/scale
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - policy
+    resources:
+      - poddisruptionbudgets
+      - poddisruptionbudgets/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses
+      - ingresses/status
+    verbs:
+      - get
+      - list
+      - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations: {}
+  name: educates-edit-session-role
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - pods/attach
+      - pods/exec
+      - pods/portforward
+      - pods/proxy
+      - secrets
+      - services/proxy
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - serviceaccounts
+    verbs:
+      - impersonate
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - pods/attach
+      - pods/exec
+      - pods/portforward
+      - pods/proxy
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - endpoints
+      - persistentvolumeclaims
+      - replicationcontrollers
+      - replicationcontrollers/scale
+      - secrets
+      - serviceaccounts
+      - services
+      - services/proxy
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+  - apiGroups:
+      - apps
+    resources:
+      - daemonsets
+      - deployments
+      - deployments/rollback
+      - deployments/scale
+      - replicasets
+      - replicasets/scale
+      - statefulsets
+      - statefulsets/scale
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+  - apiGroups:
+      - autoscaling
+    resources:
+      - horizontalpodautoscalers
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+  - apiGroups:
+      - batch
+    resources:
+      - cronjobs
+      - jobs
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+  - apiGroups:
+      - extensions
+    resources:
+      - daemonsets
+      - deployments
+      - deployments/rollback
+      - deployments/scale
+      - ingresses
+      - replicasets
+      - replicasets/scale
+      - replicationcontrollers/scale
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+  - apiGroups:
+      - policy
+    resources:
+      - poddisruptionbudgets
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - endpoints
+      - persistentvolumeclaims
+      - persistentvolumeclaims/status
+      - pods
+      - replicationcontrollers
+      - replicationcontrollers/scale
+      - serviceaccounts
+      - services
+      - services/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - bindings
+      - events
+      - limitranges
+      - namespaces/status
+      - pods/log
+      - pods/status
+      - replicationcontrollers/status
+      - resourcequotas
+      - resourcequotas/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - apps
+    resources:
+      - controllerrevisions
+      - daemonsets
+      - daemonsets/status
+      - deployments
+      - deployments/scale
+      - deployments/status
+      - replicasets
+      - replicasets/scale
+      - replicasets/status
+      - statefulsets
+      - statefulsets/scale
+      - statefulsets/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - autoscaling
+    resources:
+      - horizontalpodautoscalers
+      - horizontalpodautoscalers/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - batch
+    resources:
+      - cronjobs
+      - cronjobs/status
+      - jobs
+      - jobs/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - daemonsets
+      - daemonsets/status
+      - deployments
+      - deployments/scale
+      - deployments/status
+      - ingresses
+      - ingresses/status
+      - replicasets
+      - replicasets/scale
+      - replicasets/status
+      - replicationcontrollers/scale
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - policy
+    resources:
+      - poddisruptionbudgets
+      - poddisruptionbudgets/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses
+      - ingresses/status
+    verbs:
+      - get
+      - list
+      - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations: {}
+  name: educates-admin-session-role
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - pods/attach
+      - pods/exec
+      - pods/portforward
+      - pods/proxy
+      - secrets
+      - services/proxy
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - serviceaccounts
+    verbs:
+      - impersonate
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - pods/attach
+      - pods/exec
+      - pods/portforward
+      - pods/proxy
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - endpoints
+      - persistentvolumeclaims
+      - replicationcontrollers
+      - replicationcontrollers/scale
+      - secrets
+      - serviceaccounts
+      - services
+      - services/proxy
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+  - apiGroups:
+      - apps
+    resources:
+      - daemonsets
+      - deployments
+      - deployments/rollback
+      - deployments/scale
+      - replicasets
+      - replicasets/scale
+      - statefulsets
+      - statefulsets/scale
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+  - apiGroups:
+      - autoscaling
+    resources:
+      - horizontalpodautoscalers
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+  - apiGroups:
+      - batch
+    resources:
+      - cronjobs
+      - jobs
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+  - apiGroups:
+      - extensions
+    resources:
+      - daemonsets
+      - deployments
+      - deployments/rollback
+      - deployments/scale
+      - ingresses
+      - replicasets
+      - replicasets/scale
+      - replicationcontrollers/scale
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+  - apiGroups:
+      - policy
+    resources:
+      - poddisruptionbudgets
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - endpoints
+      - persistentvolumeclaims
+      - persistentvolumeclaims/status
+      - pods
+      - replicationcontrollers
+      - replicationcontrollers/scale
+      - serviceaccounts
+      - services
+      - services/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - bindings
+      - events
+      - limitranges
+      - namespaces/status
+      - pods/log
+      - pods/status
+      - replicationcontrollers/status
+      - resourcequotas
+      - resourcequotas/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - apps
+    resources:
+      - controllerrevisions
+      - daemonsets
+      - daemonsets/status
+      - deployments
+      - deployments/scale
+      - deployments/status
+      - replicasets
+      - replicasets/scale
+      - replicasets/status
+      - statefulsets
+      - statefulsets/scale
+      - statefulsets/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - autoscaling
+    resources:
+      - horizontalpodautoscalers
+      - horizontalpodautoscalers/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - batch
+    resources:
+      - cronjobs
+      - cronjobs/status
+      - jobs
+      - jobs/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - daemonsets
+      - daemonsets/status
+      - deployments
+      - deployments/scale
+      - deployments/status
+      - ingresses
+      - ingresses/status
+      - replicasets
+      - replicasets/scale
+      - replicasets/status
+      - replicationcontrollers/scale
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - policy
+    resources:
+      - poddisruptionbudgets
+      - poddisruptionbudgets/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses
+      - ingresses/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - authorization.k8s.io
+    resources:
+      - localsubjectaccessreviews
+    verbs:
+      - create
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - rolebindings
+      - roles
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - get
+      - list
+      - patch
+      - update
+      - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations: {}
+  name: educates-training-portal
+rules:
+  - apiGroups:
+      - ""
+    resourceNames:
+      - default
+    resources:
+      - namespaces
+    verbs:
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+  - apiGroups:
+      - training.educates.dev
+    resources:
+      - workshops
+      - workshopenvironments
+      - workshopsessions
+      - workshopallocations
+      - trainingportals
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - training.educates.dev
+    resources:
+      - trainingportals/finalizers
+      - workshopenvironments/finalizers
+      - workshopsessions/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - training.educates.dev
+    resources:
+      - workshopenvironments
+      - workshopsessions
+      - workshopallocations
+    verbs:
+      - create
+      - patch
+      - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations: {}
+  name: educates-tunnel-manager
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - serviceaccounts
+    verbs:
+      - get
+      - list
+      - watch
+      - patch
+      - update
+  - apiGroups:
+      - training.educates.dev
+    resources:
+      - workshopsessions
+    verbs:
+      - get
+      - list
+      - watch
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations: {}
+  name: session-manager
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations: {}
+  name: image-puller
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  annotations: {}
+  name: educates-session-manager
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: session-manager
+    namespace: ${NAMESPACE}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  annotations:
+    kubernetes.io/service-account.name: session-manager
+  name: session-manager-token
+type: kubernetes.io/service-account-token
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  annotations: {}
+  name: image-puller
+spec:
+  selector:
+    matchLabels:
+      app: image-puller
+  template:
+    metadata:
+      labels:
+        app: image-puller
+    spec:
+      containers:
+        - image: ghcr.io/educates/educates-pause-container@sha256:9c1994329d727fb9191fbd7d079d86c32d0a480090c9fc2766926e1879556395
+          imagePullPolicy: IfNotPresent
+          name: pause
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+      initContainers:
+        - command:
+            - /bin/true
+          image: ghcr.io/educates/educates-training-portal@sha256:ad8568c12eca9ed612773eec21c206477714e98f2c406e6da832f072b9dba8b0
+          imagePullPolicy: IfNotPresent
+          name: training-portal
+        - command:
+            - /bin/true
+          image: ghcr.io/educates/educates-base-environment@sha256:f5450978a161f725329b179b28b04b492973e7bc2c30c6fbb820a43876f56608
+          imagePullPolicy: IfNotPresent
+          name: base-environment
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+      serviceAccountName: image-puller
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations: {}
+  name: session-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: session-manager
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        deployment: session-manager
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - image: ghcr.io/educates/educates-session-manager@sha256:1d4962e37e471e490c9e611a9550e755b36fd512eca6e95b75ed6d26810afc0b
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthz?probe=liveness
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: operator
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          startupProbe:
+            failureThreshold: 4
+            httpGet:
+              path: /healthz?probe=startup
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          volumeMounts:
+            - mountPath: /opt/app-root/config/
+              name: config
+            - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+              name: token
+              readOnly: true
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+      serviceAccountName: session-manager
+      volumes:
+        - name: config
+          secret:
+            secretName: educates-config
+        - name: token
+          secret:
+            secretName: session-manager-token
+---
+apiVersion: secrets.educates.dev/v1beta1
+kind: SecretCopier
+metadata:
+  annotations: {}
+  name: educates-ingress-secrets
+spec:
+  rules:
+    - sourceSecret:
+        name: ${TLS_CERTIFICATE_REF_NAME}
+        namespace: ${TLS_CERTIFICATE_REF_NAMESPACE}
+      targetNamespaces:
+        nameSelector:
+          matchNames:
+            - educates
+---
+apiVersion: secrets.educates.dev/v1beta1
+kind: SecretInjector
+metadata:
+  annotations: {}
+  name: educates-registry-credentials
+spec:
+  rules:
+    - serviceAccounts:
+        nameSelector:
+          matchNames:
+            - default
+      sourceSecrets:
+        nameSelector:
+          matchNames:
+            - educates-registry-credentials
+      targetNamespaces:
+        labelSelector:
+          matchLabels:
+            training.educates.dev/component: session
+---
+apiVersion: v1
+data:
+  educates-original-config.yaml: |
+    clusterInfrastructure:
+      provider: generic
+    imageVersions:
+    - name: session-manager
+      image: ghcr.io/educates/educates-session-manager:3.4.0
+    - name: training-portal
+      image: ghcr.io/educates/educates-training-portal:3.4.0
+    - name: docker-registry
+      image: ghcr.io/educates/educates-docker-registry:3.4.0
+    - name: pause-container
+      image: ghcr.io/educates/educates-pause-container:3.4.0
+    - name: base-environment
+      image: ghcr.io/educates/educates-base-environment:3.4.0
+    - name: jdk8-environment
+      image: ghcr.io/educates/educates-jdk8-environment:3.4.0
+    - name: jdk11-environment
+      image: ghcr.io/educates/educates-jdk11-environment:3.4.0
+    - name: jdk17-environment
+      image: ghcr.io/educates/educates-jdk17-environment:3.4.0
+    - name: jdk21-environment
+      image: ghcr.io/educates/educates-jdk21-environment:3.4.0
+    - name: conda-environment
+      image: ghcr.io/educates/educates-conda-environment:3.4.0
+    - name: secrets-manager
+      image: ghcr.io/educates/educates-secrets-manager:3.4.0
+    - name: tunnel-manager
+      image: ghcr.io/educates/educates-tunnel-manager:3.4.0
+    - name: image-cache
+      image: ghcr.io/educates/educates-image-cache:3.4.0
+    - name: assets-server
+      image: ghcr.io/educates/educates-assets-server:3.4.0
+    - name: lookup-service
+      image: ghcr.io/educates/educates-lookup-service:3.4.0
+    - name: debian-base-image
+      image: debian:sid-20230502-slim
+    - name: docker-in-docker
+      image: docker:27.5.1-dind
+    - name: rancher-k3s-v1.27
+      image: rancher/k3s:v1.27.14-k3s1
+    - name: rancher-k3s-v1.28
+      image: rancher/k3s:v1.28.10-k3s1
+    - name: rancher-k3s-v1.29
+      image: rancher/k3s:v1.29.5-k3s1
+    - name: rancher-k3s-v1.30
+      image: rancher/k3s:v1.30.1-k3s1
+    - name: loftsh-vcluster
+      image: loftsh/vcluster:0.18.1
+    clusterIngress:
+      domain: ${CLUSTER_INGRESS_DOMAIN}
+      class: ${CLUSTER_INGRESS_CLASS}
+      tlsCertificateRef:
+        namespace: ${TLS_CERTIFICATE_REF_NAMESPACE}
+        name: ${TLS_CERTIFICATE_REF_NAME}
+    clusterSecurity:
+      policyEngine: none
+    workshopSecurity:
+      rulesEngine: none
+  educates-processed-values.yaml: |
+    ---
+    clusterPackages:
+      cert-manager:
+        enabled: false
+        settings: {}
+      certs:
+        enabled: false
+        settings: {}
+      contour:
+        enabled: false
+        settings: {}
+      educates:
+        enabled: true
+        settings:
+          clusterIngress:
+            class: ${CLUSTER_INGRESS_CLASS}
+            domain: ${CLUSTER_INGRESS_DOMAIN}
+            tlsCertificateRef:
+              name: ${TLS_CERTIFICATE_REF_NAME}
+              namespace: ${TLS_CERTIFICATE_REF_NAMESPACE}
+          clusterSecurity:
+            policyEngine: none
+          imageVersions:
+          - image: ghcr.io/educates/educates-session-manager@sha256:1d4962e37e471e490c9e611a9550e755b36fd512eca6e95b75ed6d26810afc0b
+            name: session-manager
+          - image: ghcr.io/educates/educates-training-portal@sha256:ad8568c12eca9ed612773eec21c206477714e98f2c406e6da832f072b9dba8b0
+            name: training-portal
+          - image: ghcr.io/educates/educates-docker-registry@sha256:1beda027a9a6cd3e5804c7eb0b4a06b017c653d8cdb247e4a468087f21f8bcff
+            name: docker-registry
+          - image: ghcr.io/educates/educates-pause-container@sha256:9c1994329d727fb9191fbd7d079d86c32d0a480090c9fc2766926e1879556395
+            name: pause-container
+          - image: ghcr.io/educates/educates-base-environment@sha256:f5450978a161f725329b179b28b04b492973e7bc2c30c6fbb820a43876f56608
+            name: base-environment
+          - image: ghcr.io/educates/educates-jdk8-environment@sha256:0589012a01a9ef1284944ce0a19c1dc0dd0e6c410a0a2793626c0a232577e380
+            name: jdk8-environment
+          - image: ghcr.io/educates/educates-jdk11-environment@sha256:15e512b6203f7d6eebbc101d8221dcca210b1a24723d6f10529c6d341304c44a
+            name: jdk11-environment
+          - image: ghcr.io/educates/educates-jdk17-environment@sha256:3ee54057c5b6fe4a6d62c7660601eafb2eb8fb890a1ce31cb2568db8ae352c1e
+            name: jdk17-environment
+          - image: ghcr.io/educates/educates-jdk21-environment@sha256:e5621d0f4cecb9edfda9ab94d127ae904babf25a306808104f260ced9a843cb3
+            name: jdk21-environment
+          - image: ghcr.io/educates/educates-conda-environment@sha256:4fd9db80cf3a1497f6161cee422cf05aa3e4c4ffbd9c000e23510544915b8b48
+            name: conda-environment
+          - image: ghcr.io/educates/educates-secrets-manager@sha256:6de14a95ec141e2008754dfa64171c8113db479d50d0aad1d4a8b0cafff82953
+            name: secrets-manager
+          - image: ghcr.io/educates/educates-tunnel-manager@sha256:3ace6dbe1953ca485d6c92d6ca3d0ec3760126154169d85a70826fb9bddd933f
+            name: tunnel-manager
+          - image: ghcr.io/educates/educates-image-cache@sha256:974d0c5f6a92fe8e0ff839680e4dc3e9570390f2f61d32d488fb8bacd6bb050e
+            name: image-cache
+          - image: ghcr.io/educates/educates-assets-server@sha256:2a7162091b6104e3956e931dcad6b9f2976fbfd924419cf7e840f1ea7667f9af
+            name: assets-server
+          - image: ghcr.io/educates/educates-lookup-service@sha256:9534ae921a37aef2dc6affd8caa1b1a99eec249a7f3d43353e0b73e670d1ed31
+            name: lookup-service
+          - image: index.docker.io/library/debian@sha256:25095ed790e32ed43236eb0c793a9959deda9d623bd527aa44a11d51c371397f
+            name: debian-base-image
+          - image: index.docker.io/library/docker@sha256:aa3df78ecf320f5fafdce71c659f1629e96e9de0968305fe1de670e0ca9176ce
+            name: docker-in-docker
+          - image: index.docker.io/rancher/k3s@sha256:2713528633c2d4ebebd8efc230aae45e925843b7bfd30ce6a99eabc9b2dbb469
+            name: rancher-k3s-v1.27
+          - image: index.docker.io/rancher/k3s@sha256:2006d64b91f174717ef251ad5da83464fefd0e0acb9e0104bf0406a45b89050f
+            name: rancher-k3s-v1.28
+          - image: index.docker.io/rancher/k3s@sha256:4c448f219e2296ad15317665a80c9923f95783160207b9b972c1ec8365cdbe8f
+            name: rancher-k3s-v1.29
+          - image: index.docker.io/rancher/k3s@sha256:09e019280cdc89d038644f1656ac7f2aed98807bd97c20e2dc1b5b9f534a0718
+            name: rancher-k3s-v1.30
+          - image: index.docker.io/loftsh/vcluster@sha256:8a5a517af259461fb1b19aaf2826753b136799f6137ff9b342ef787fa3cec013
+            name: loftsh-vcluster
+          workshopSecurity:
+            rulesEngine: none
+      external-dns:
+        enabled: false
+        settings: {}
+      kapp-controller:
+        enabled: false
+        settings: {}
+      kyverno:
+        enabled: false
+        settings: {}
+kind: ConfigMap
+metadata:
+  annotations: {}
+  name: educates-config

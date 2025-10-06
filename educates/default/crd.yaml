@@ -1,0 +1,2596 @@
+# Copyright 2025, EOX (https://eox.at) and Versioneer (https://versioneer.at)
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations: {}
+  name: secretcopiers.secrets.educates.dev
+spec:
+  group: secrets.educates.dev
+  names:
+    categories:
+      - educates-secrets
+    kind: SecretCopier
+    plural: secretcopiers
+    singular: secretcopier
+  scope: Cluster
+  versions:
+    - name: v1beta1
+      schema:
+        openAPIV3Schema:
+          properties:
+            spec:
+              properties:
+                rules:
+                  items:
+                    properties:
+                      copyAuthorization:
+                        properties:
+                          sharedSecret:
+                            type: string
+                        type: object
+                      reclaimPolicy:
+                        default: Delete
+                        enum:
+                          - Delete
+                          - Retain
+                        type: string
+                      sourceSecret:
+                        properties:
+                          name:
+                            type: string
+                          namespace:
+                            type: string
+                        required:
+                          - name
+                          - namespace
+                        type: object
+                      targetNamespaces:
+                        properties:
+                          labelSelector:
+                            properties:
+                              matchExpressions:
+                                items:
+                                  properties:
+                                    key:
+                                      type: string
+                                    operator:
+                                      enum:
+                                        - In
+                                        - NotIn
+                                        - Exists
+                                        - DoesNotExist
+                                      type: string
+                                    values:
+                                      items:
+                                        type: string
+                                      type: array
+                                  required:
+                                    - key
+                                    - operator
+                                  type: object
+                                type: array
+                              matchLabels:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                            type: object
+                          nameSelector:
+                            properties:
+                              matchNames:
+                                items:
+                                  type: string
+                                type: array
+                            required:
+                              - matchNames
+                            type: object
+                          ownerSelector:
+                            properties:
+                              matchOwners:
+                                items:
+                                  properties:
+                                    apiVersion:
+                                      type: string
+                                    kind:
+                                      type: string
+                                    name:
+                                      type: string
+                                    uid:
+                                      type: string
+                                  required:
+                                    - apiVersion
+                                    - kind
+                                    - name
+                                    - uid
+                                  type: object
+                                type: array
+                            required:
+                              - matchOwners
+                            type: object
+                          uidSelector:
+                            properties:
+                              matchUIDs:
+                                items:
+                                  type: string
+                                type: array
+                            required:
+                              - matchUIDs
+                            type: object
+                        type: object
+                      targetSecret:
+                        properties:
+                          labels:
+                            additionalProperties:
+                              type: string
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          name:
+                            type: string
+                        type: object
+                    required:
+                      - sourceSecret
+                    type: object
+                  type: array
+              type: object
+            status:
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+          type: object
+      served: true
+      storage: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations: {}
+  name: secretexporters.secrets.educates.dev
+spec:
+  group: secrets.educates.dev
+  names:
+    categories:
+      - educates-secrets
+    kind: SecretExporter
+    plural: secretexporters
+    singular: secretexporter
+  scope: Namespaced
+  versions:
+    - name: v1beta1
+      schema:
+        openAPIV3Schema:
+          properties:
+            spec:
+              properties:
+                rules:
+                  items:
+                    properties:
+                      copyAuthorization:
+                        properties:
+                          sharedSecret:
+                            type: string
+                        required:
+                          - sharedSecret
+                        type: object
+                      targetNamespaces:
+                        anyOf:
+                          - required:
+                              - nameSelector
+                          - required:
+                              - uidSelector
+                          - required:
+                              - labelSelector
+                        properties:
+                          labelSelector:
+                            properties:
+                              matchExpressions:
+                                items:
+                                  properties:
+                                    key:
+                                      type: string
+                                    operator:
+                                      enum:
+                                        - In
+                                        - NotIn
+                                        - Exists
+                                        - DoesNotExist
+                                      type: string
+                                    values:
+                                      items:
+                                        type: string
+                                      type: array
+                                  required:
+                                    - key
+                                    - operator
+                                  type: object
+                                type: array
+                              matchLabels:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                            type: object
+                          nameSelector:
+                            properties:
+                              matchNames:
+                                items:
+                                  type: string
+                                type: array
+                            required:
+                              - matchNames
+                            type: object
+                          ownerSelector:
+                            properties:
+                              matchOwners:
+                                items:
+                                  properties:
+                                    apiVersion:
+                                      type: string
+                                    kind:
+                                      type: string
+                                    name:
+                                      type: string
+                                    uid:
+                                      type: string
+                                  required:
+                                    - apiVersion
+                                    - kind
+                                    - name
+                                    - uid
+                                  type: object
+                                type: array
+                            required:
+                              - matchOwners
+                            type: object
+                          uidSelector:
+                            properties:
+                              matchUIDs:
+                                items:
+                                  type: string
+                                type: array
+                            required:
+                              - matchUIDs
+                            type: object
+                        type: object
+                      targetSecret:
+                        properties:
+                          labels:
+                            additionalProperties:
+                              type: string
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          name:
+                            type: string
+                        type: object
+                    required:
+                      - targetNamespaces
+                    type: object
+                  type: array
+              type: object
+            status:
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+          required:
+            - spec
+          type: object
+      served: true
+      storage: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations: {}
+  name: secretimporters.secrets.educates.dev
+spec:
+  group: secrets.educates.dev
+  names:
+    categories:
+      - educates-secrets
+    kind: SecretImporter
+    plural: secretimporters
+    singular: secretimporter
+  scope: Namespaced
+  versions:
+    - name: v1beta1
+      schema:
+        openAPIV3Schema:
+          properties:
+            spec:
+              properties:
+                copyAuthorization:
+                  properties:
+                    sharedSecret:
+                      type: string
+                  required:
+                    - sharedSecret
+                  type: object
+                sourceNamespaces:
+                  properties:
+                    nameSelector:
+                      properties:
+                        matchNames:
+                          items:
+                            type: string
+                          type: array
+                      required:
+                        - matchNames
+                      type: object
+                  type: object
+                sourceSecret:
+                  properties:
+                    name:
+                      type: string
+                  required:
+                    - name
+                  type: object
+              type: object
+            status:
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+          required:
+            - spec
+          type: object
+      served: true
+      storage: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations: {}
+  name: secretinjectors.secrets.educates.dev
+spec:
+  group: secrets.educates.dev
+  names:
+    categories:
+      - educates-secrets
+    kind: SecretInjector
+    plural: secretinjectors
+    singular: secretinjector
+  scope: Cluster
+  versions:
+    - name: v1beta1
+      schema:
+        openAPIV3Schema:
+          properties:
+            spec:
+              properties:
+                rules:
+                  items:
+                    properties:
+                      serviceAccounts:
+                        properties:
+                          labelSelector:
+                            properties:
+                              matchExpressions:
+                                items:
+                                  properties:
+                                    key:
+                                      type: string
+                                    operator:
+                                      enum:
+                                        - In
+                                        - NotIn
+                                        - Exists
+                                        - DoesNotExist
+                                      type: string
+                                    values:
+                                      items:
+                                        type: string
+                                      type: array
+                                  required:
+                                    - key
+                                    - operator
+                                  type: object
+                                type: array
+                              matchLabels:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                            type: object
+                          nameSelector:
+                            properties:
+                              matchNames:
+                                items:
+                                  type: string
+                                type: array
+                            required:
+                              - matchNames
+                            type: object
+                        type: object
+                      sourceSecrets:
+                        anyOf:
+                          - required:
+                              - nameSelector
+                          - required:
+                              - labelSelector
+                        properties:
+                          labelSelector:
+                            properties:
+                              matchExpressions:
+                                items:
+                                  properties:
+                                    key:
+                                      type: string
+                                    operator:
+                                      enum:
+                                        - In
+                                        - NotIn
+                                        - Exists
+                                        - DoesNotExist
+                                      type: string
+                                    values:
+                                      items:
+                                        type: string
+                                      type: array
+                                  required:
+                                    - key
+                                    - operator
+                                  type: object
+                                type: array
+                              matchLabels:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                            type: object
+                          nameSelector:
+                            properties:
+                              matchNames:
+                                items:
+                                  type: string
+                                type: array
+                            required:
+                              - matchNames
+                            type: object
+                        type: object
+                      targetNamespaces:
+                        properties:
+                          labelSelector:
+                            properties:
+                              matchExpressions:
+                                items:
+                                  properties:
+                                    key:
+                                      type: string
+                                    operator:
+                                      enum:
+                                        - In
+                                        - NotIn
+                                        - Exists
+                                        - DoesNotExist
+                                      type: string
+                                    values:
+                                      items:
+                                        type: string
+                                      type: array
+                                  required:
+                                    - key
+                                    - operator
+                                  type: object
+                                type: array
+                              matchLabels:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                            type: object
+                          nameSelector:
+                            properties:
+                              matchNames:
+                                items:
+                                  type: string
+                                type: array
+                            required:
+                              - matchNames
+                            type: object
+                          uidSelector:
+                            properties:
+                              matchUIDs:
+                                items:
+                                  type: string
+                                type: array
+                            required:
+                              - matchUIDs
+                            type: object
+                        type: object
+                    required:
+                      - sourceSecrets
+                    type: object
+                  type: array
+              type: object
+            status:
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+          type: object
+      served: true
+      storage: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations: {}
+  name: trainingportals.training.educates.dev
+spec:
+  group: training.educates.dev
+  names:
+    categories:
+      - educates
+      - educates-training
+    kind: TrainingPortal
+    plural: trainingportals
+    singular: trainingportal
+  scope: Cluster
+  versions:
+    - additionalPrinterColumns:
+        - description: The URL for accessing the portal.
+          jsonPath: .status.educates.url
+          name: URL
+          priority: 0
+          type: string
+        - description: Password for accessing the training portal.
+          jsonPath: .spec.portal.password
+          name: PortalPassword
+          priority: 0
+          type: string
+        - description: The username for accessing admin pages.
+          jsonPath: .status.educates.credentials.admin.username
+          name: AdminUsername
+          priority: 0
+          type: string
+        - description: The password for accessing admin pages.
+          jsonPath: .status.educates.credentials.admin.password
+          name: AdminPassword
+          priority: 0
+          type: string
+        - description: Status of training portal deployment.
+          jsonPath: .status.educates.phase
+          name: Status
+          priority: 0
+          type: string
+        - description: Status message.
+          jsonPath: .status.educates.message
+          name: Message
+          priority: 0
+          type: string
+      name: v1beta1
+      schema:
+        openAPIV3Schema:
+          properties:
+            spec:
+              properties:
+                analytics:
+                  properties:
+                    amplitude:
+                      properties:
+                        trackingId:
+                          type: string
+                      required:
+                        - trackingId
+                      type: object
+                    clarity:
+                      properties:
+                        trackingId:
+                          type: string
+                      required:
+                        - trackingId
+                      type: object
+                    google:
+                      properties:
+                        trackingId:
+                          type: string
+                      required:
+                        - trackingId
+                      type: object
+                    webhook:
+                      properties:
+                        url:
+                          type: string
+                      required:
+                        - url
+                      type: object
+                  type: object
+                portal:
+                  properties:
+                    capacity:
+                      type: integer
+                    catalog:
+                      properties:
+                        visibility:
+                          pattern: ^(public|private)$
+                          type: string
+                      type: object
+                    clients:
+                      properties:
+                        robot:
+                          properties:
+                            id:
+                              type: string
+                            secret:
+                              type: string
+                          type: object
+                      type: object
+                    cookies:
+                      properties:
+                        domain:
+                          type: string
+                      type: object
+                    credentials:
+                      properties:
+                        admin:
+                          properties:
+                            password:
+                              type: string
+                            username:
+                              type: string
+                          type: object
+                        robot:
+                          properties:
+                            password:
+                              type: string
+                            username:
+                              type: string
+                          type: object
+                      type: object
+                    expires:
+                      pattern: ^\d+(s|m|h)$
+                      type: string
+                    index:
+                      type: string
+                    ingress:
+                      properties:
+                        hostname:
+                          type: string
+                        tlsCertificateRef:
+                          properties:
+                            name:
+                              type: string
+                            namespace:
+                              type: string
+                          required:
+                            - name
+                          type: object
+                      type: object
+                    initial:
+                      type: integer
+                    labels:
+                      items:
+                        properties:
+                          name:
+                            type: string
+                          value:
+                            type: string
+                        required:
+                          - name
+                        type: object
+                      type: array
+                    logo:
+                      type: string
+                    orphaned:
+                      pattern: ^\d+(s|m|h)$
+                      type: string
+                    password:
+                      type: string
+                    registration:
+                      properties:
+                        enabled:
+                          type: boolean
+                        type:
+                          pattern: ^(one-step|anonymous)$
+                          type: string
+                      type: object
+                    reserved:
+                      type: integer
+                    sessions:
+                      properties:
+                        anonymous:
+                          type: integer
+                        maximum:
+                          type: integer
+                        registered:
+                          type: integer
+                      type: object
+                    theme:
+                      properties:
+                        frame:
+                          properties:
+                            ancestors:
+                              items:
+                                type: string
+                              type: array
+                          type: object
+                        name:
+                          type: string
+                      type: object
+                    title:
+                      type: string
+                    updates:
+                      properties:
+                        workshop:
+                          default: false
+                          type: boolean
+                      type: object
+                    workshop:
+                      properties:
+                        defaults:
+                          properties:
+                            capacity:
+                              type: integer
+                            deadline:
+                              pattern: ^\d+(s|m|h)$
+                              type: string
+                            env:
+                              items:
+                                properties:
+                                  name:
+                                    type: string
+                                  value:
+                                    type: string
+                                required:
+                                  - name
+                                type: object
+                              type: array
+                            expires:
+                              pattern: ^\d+(s|m|h)$
+                              type: string
+                            initial:
+                              type: integer
+                            labels:
+                              items:
+                                properties:
+                                  name:
+                                    type: string
+                                  value:
+                                    type: string
+                                required:
+                                  - name
+                                type: object
+                              type: array
+                            orphaned:
+                              pattern: ^\d+(s|m|h)$
+                              type: string
+                            overdue:
+                              pattern: ^\d+(s|m|h)$
+                              type: string
+                            overtime:
+                              pattern: ^\d+(s|m|h)$
+                              type: string
+                            refresh:
+                              pattern: ^\d+(s|m|h)$
+                              type: string
+                            registry:
+                              properties:
+                                host:
+                                  type: string
+                                namespace:
+                                  type: string
+                              required:
+                                - host
+                              type: object
+                            reserved:
+                              type: integer
+                          type: object
+                      type: object
+                  type: object
+                workshops:
+                  items:
+                    properties:
+                      alias:
+                        type: string
+                      capacity:
+                        type: integer
+                      deadline:
+                        pattern: ^\d+(s|m|h)$
+                        type: string
+                      env:
+                        items:
+                          properties:
+                            name:
+                              type: string
+                            value:
+                              type: string
+                          required:
+                            - name
+                          type: object
+                        type: array
+                      expires:
+                        pattern: ^\d+(s|m|h)$
+                        type: string
+                      initial:
+                        type: integer
+                      labels:
+                        items:
+                          properties:
+                            name:
+                              type: string
+                            value:
+                              type: string
+                          required:
+                            - name
+                          type: object
+                        type: array
+                      name:
+                        minLength: 1
+                        type: string
+                      orphaned:
+                        pattern: ^\d+(s|m|h)$
+                        type: string
+                      overdue:
+                        pattern: ^\d+(s|m|h)$
+                        type: string
+                      overtime:
+                        pattern: ^\d+(s|m|h)$
+                        type: string
+                      refresh:
+                        pattern: ^\d+(s|m|h)$
+                        type: string
+                      registry:
+                        properties:
+                          host:
+                            type: string
+                          namespace:
+                            type: string
+                        required:
+                          - host
+                        type: object
+                      reserved:
+                        type: integer
+                    required:
+                      - name
+                    type: object
+                  type: array
+              type: object
+            status:
+              properties:
+                educates:
+                  properties:
+                    clients:
+                      properties:
+                        robot:
+                          properties:
+                            id:
+                              type: string
+                            secret:
+                              type: string
+                          required:
+                            - id
+                            - secret
+                          type: object
+                      required:
+                        - robot
+                      type: object
+                    credentials:
+                      properties:
+                        admin:
+                          properties:
+                            password:
+                              type: string
+                            username:
+                              type: string
+                          required:
+                            - username
+                            - password
+                          type: object
+                        robot:
+                          properties:
+                            password:
+                              type: string
+                            username:
+                              type: string
+                          required:
+                            - username
+                            - password
+                          type: object
+                      required:
+                        - admin
+                        - robot
+                      type: object
+                    message:
+                      type: string
+                    namespace:
+                      type: string
+                    phase:
+                      type: string
+                    secrets:
+                      properties:
+                        ingress:
+                          items:
+                            type: string
+                          type: array
+                        registry:
+                          items:
+                            type: string
+                          type: array
+                      type: object
+                    url:
+                      type: string
+                  required:
+                    - phase
+                  type: object
+                kopf:
+                  type: object
+                  x-kubernetes-preserve-unknown-fields: true
+              type: object
+          type: object
+      served: true
+      storage: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations: {}
+  name: workshops.training.educates.dev
+spec:
+  group: training.educates.dev
+  names:
+    categories:
+      - educates
+      - educates-training
+    kind: Workshop
+    plural: workshops
+    singular: workshop
+  scope: Cluster
+  versions:
+    - additionalPrinterColumns:
+        - description: URL for further information on the workshop.
+          jsonPath: .spec.url
+          name: URL
+          priority: 0
+          type: string
+      name: v1beta1
+      schema:
+        openAPIV3Schema:
+          properties:
+            spec:
+              properties:
+                authors:
+                  items:
+                    type: string
+                  type: array
+                content:
+                  properties:
+                    files:
+                      type: string
+                    image:
+                      type: string
+                  type: object
+                description:
+                  type: string
+                difficulty:
+                  pattern: ^(beginner|intermediate|advanced|extreme)$
+                  type: string
+                duration:
+                  pattern: ^\d+(s|m|h)$
+                  type: string
+                environment:
+                  properties:
+                    assets:
+                      properties:
+                        files:
+                          items:
+                            oneOf:
+                              - required:
+                                  - git
+                              - required:
+                                  - hg
+                              - required:
+                                  - http
+                              - required:
+                                  - image
+                              - required:
+                                  - imgpkgBundle
+                              - required:
+                                  - githubRelease
+                              - required:
+                                  - helmChart
+                              - required:
+                                  - inline
+                              - required:
+                                  - directory
+                            properties:
+                              directory:
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                              excludePaths:
+                                items:
+                                  type: string
+                                type: array
+                              git:
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                              githubRelease:
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                              helmChart:
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                              hg:
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                              http:
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                              image:
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                              imgpkgBundle:
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                              includePaths:
+                                items:
+                                  type: string
+                                type: array
+                              inline:
+                                properties:
+                                  paths:
+                                    additionalProperties:
+                                      type: string
+                                    type: object
+                                    x-kubernetes-preserve-unknown-fields: true
+                                  pathsFrom:
+                                    items:
+                                      properties:
+                                        secretRef:
+                                          properties:
+                                            directoryPath:
+                                              type: string
+                                            name:
+                                              type: string
+                                          required:
+                                            - name
+                                          type: object
+                                      required:
+                                        - secretRef
+                                      type: object
+                                    type: array
+                                type: object
+                              legalPaths:
+                                items:
+                                  type: string
+                                type: array
+                              newRootPath:
+                                type: string
+                              path:
+                                default: .
+                                type: string
+                            type: object
+                          type: array
+                        ingress:
+                          properties:
+                            enabled:
+                              default: false
+                              type: boolean
+                          type: object
+                        memory:
+                          type: string
+                        storage:
+                          type: string
+                      required:
+                        - files
+                      type: object
+                    images:
+                      properties:
+                        ingress:
+                          properties:
+                            enabled:
+                              default: false
+                              type: boolean
+                          type: object
+                        memory:
+                          type: string
+                        registries:
+                          items:
+                            properties:
+                              content:
+                                items:
+                                  properties:
+                                    destination:
+                                      type: string
+                                    prefix:
+                                      type: string
+                                    stripPrefix:
+                                      type: boolean
+                                    tags:
+                                      properties:
+                                        regex:
+                                          type: string
+                                        semver:
+                                          type: boolean
+                                      required:
+                                        - regex
+                                      type: object
+                                  type: object
+                                type: array
+                              maxRetries:
+                                type: integer
+                              onDemand:
+                                type: boolean
+                              onlySigned:
+                                type: boolean
+                              pollInterval:
+                                type: string
+                              retryDelay:
+                                type: string
+                              tlsVerify:
+                                type: boolean
+                              urls:
+                                items:
+                                  type: string
+                                type: array
+                            required:
+                              - urls
+                            type: object
+                          type: array
+                        storage:
+                          type: string
+                      type: object
+                    objects:
+                      items:
+                        type: object
+                        x-kubernetes-preserve-unknown-fields: true
+                      type: array
+                    secrets:
+                      items:
+                        properties:
+                          labels:
+                            additionalProperties:
+                              type: string
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          name:
+                            type: string
+                          namespace:
+                            type: string
+                        required:
+                          - namespace
+                          - name
+                        type: object
+                      type: array
+                  type: object
+                images:
+                  items:
+                    properties:
+                      image:
+                        type: string
+                      name:
+                        type: string
+                    required:
+                      - name
+                      - image
+                    type: object
+                  type: array
+                labels:
+                  items:
+                    properties:
+                      name:
+                        type: string
+                      value:
+                        type: string
+                    required:
+                      - name
+                    type: object
+                  type: array
+                logo:
+                  type: string
+                publish:
+                  properties:
+                    files:
+                      items:
+                        oneOf:
+                          - required:
+                              - git
+                          - required:
+                              - hg
+                          - required:
+                              - http
+                          - required:
+                              - image
+                          - required:
+                              - imgpkgBundle
+                          - required:
+                              - githubRelease
+                          - required:
+                              - helmChart
+                          - required:
+                              - directory
+                        properties:
+                          directory:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          excludePaths:
+                            items:
+                              type: string
+                            type: array
+                          git:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          githubRelease:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          helmChart:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          hg:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          http:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          image:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          imgpkgBundle:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          includePaths:
+                            items:
+                              type: string
+                            type: array
+                          legalPaths:
+                            items:
+                              type: string
+                            type: array
+                          newRootPath:
+                            type: string
+                          path:
+                            default: .
+                            type: string
+                        type: object
+                      type: array
+                    image:
+                      type: string
+                  type: object
+                request:
+                  properties:
+                    objects:
+                      items:
+                        type: object
+                        x-kubernetes-preserve-unknown-fields: true
+                      type: array
+                    parameters:
+                      items:
+                        properties:
+                          from:
+                            type: string
+                          generate:
+                            type: string
+                          name:
+                            type: string
+                          value:
+                            type: string
+                        required:
+                          - name
+                        type: object
+                      type: array
+                  type: object
+                session:
+                  properties:
+                    applications:
+                      properties:
+                        console:
+                          properties:
+                            enabled:
+                              type: boolean
+                            octant:
+                              properties:
+                                version:
+                                  type: string
+                              type: object
+                            vendor:
+                              type: string
+                          required:
+                            - enabled
+                          type: object
+                        docker:
+                          properties:
+                            compose:
+                              properties:
+                                services:
+                                  type: object
+                                  x-kubernetes-preserve-unknown-fields: true
+                                volumes:
+                                  type: object
+                                  x-kubernetes-preserve-unknown-fields: true
+                              required:
+                                - services
+                              type: object
+                            enabled:
+                              type: boolean
+                            memory:
+                              type: string
+                            socket:
+                              properties:
+                                enabled:
+                                  type: boolean
+                              type: object
+                            storage:
+                              type: string
+                          required:
+                            - enabled
+                          type: object
+                        editor:
+                          properties:
+                            enabled:
+                              type: boolean
+                          required:
+                            - enabled
+                          type: object
+                        examiner:
+                          properties:
+                            enabled:
+                              type: boolean
+                          required:
+                            - enabled
+                          type: object
+                        files:
+                          properties:
+                            directory:
+                              type: string
+                            enabled:
+                              type: boolean
+                          required:
+                            - enabled
+                          type: object
+                        git:
+                          properties:
+                            enabled:
+                              type: boolean
+                          required:
+                            - enabled
+                          type: object
+                        registry:
+                          properties:
+                            enabled:
+                              type: boolean
+                            memory:
+                              type: string
+                            storage:
+                              type: string
+                            volume:
+                              properties:
+                                name:
+                                  type: string
+                                subPath:
+                                  type: string
+                              required:
+                                - name
+                              type: object
+                          required:
+                            - enabled
+                          type: object
+                        slides:
+                          properties:
+                            enabled:
+                              type: boolean
+                            impress.js:
+                              properties:
+                                version:
+                                  type: string
+                              required:
+                                - version
+                              type: object
+                            reveal.js:
+                              properties:
+                                version:
+                                  type: string
+                              required:
+                                - version
+                              type: object
+                          required:
+                            - enabled
+                          type: object
+                        sshd:
+                          properties:
+                            enabled:
+                              type: boolean
+                            tunnel:
+                              properties:
+                                enabled:
+                                  default: false
+                                  type: boolean
+                                memory:
+                                  type: string
+                              required:
+                                - enabled
+                              type: object
+                          required:
+                            - enabled
+                          type: object
+                        terminal:
+                          properties:
+                            enabled:
+                              type: boolean
+                            layout:
+                              type: string
+                          required:
+                            - enabled
+                          type: object
+                        uploads:
+                          properties:
+                            directory:
+                              default: uploads
+                              type: string
+                            enabled:
+                              type: boolean
+                          required:
+                            - enabled
+                          type: object
+                        vcluster:
+                          properties:
+                            enabled:
+                              type: boolean
+                            ingress:
+                              properties:
+                                enabled:
+                                  default: false
+                                  type: boolean
+                                subdomains:
+                                  items:
+                                    type: string
+                                  type: array
+                              required:
+                                - enabled
+                              type: object
+                            objects:
+                              items:
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                              type: array
+                            resources:
+                              properties:
+                                k3s:
+                                  properties:
+                                    memory:
+                                      type: string
+                                  type: object
+                                syncer:
+                                  properties:
+                                    memory:
+                                      type: string
+                                    storage:
+                                      type: string
+                                  type: object
+                              type: object
+                            version:
+                              type: string
+                          required:
+                            - enabled
+                          type: object
+                        webdav:
+                          properties:
+                            enabled:
+                              type: boolean
+                          required:
+                            - enabled
+                          type: object
+                        workshop:
+                          properties:
+                            enabled:
+                              type: boolean
+                            layout:
+                              type: string
+                            path:
+                              type: string
+                            proxy:
+                              properties:
+                                changeOrigin:
+                                  type: boolean
+                                headers:
+                                  items:
+                                    properties:
+                                      name:
+                                        type: string
+                                      value:
+                                        type: string
+                                    required:
+                                      - name
+                                    type: object
+                                  type: array
+                                host:
+                                  type: string
+                                pathRewrite:
+                                  items:
+                                    properties:
+                                      pattern:
+                                        type: string
+                                      replacement:
+                                        type: string
+                                    required:
+                                      - pattern
+                                      - replacement
+                                    type: object
+                                  type: array
+                                port:
+                                  type: integer
+                                protocol:
+                                  type: string
+                              required:
+                                - host
+                              type: object
+                            renderer:
+                              enum:
+                                - local
+                                - remote
+                                - static
+                                - proxy
+                              type: string
+                            url:
+                              type: string
+                          type: object
+                      type: object
+                    dashboards:
+                      items:
+                        properties:
+                          name:
+                            type: string
+                          url:
+                            type: string
+                        required:
+                          - name
+                        type: object
+                      type: array
+                    env:
+                      items:
+                        properties:
+                          name:
+                            type: string
+                          value:
+                            type: string
+                          valueFrom:
+                            properties:
+                              configMapKeyRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                type: object
+                              fieldRef:
+                                properties:
+                                  apiVersion:
+                                    type: string
+                                  fieldPath:
+                                    type: string
+                                type: object
+                              resourceFieldRef:
+                                properties:
+                                  containerName:
+                                    type: string
+                                  divisor:
+                                    type: string
+                                  resource:
+                                    type: string
+                                type: object
+                              secretKeyRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                type: object
+                            type: object
+                        required:
+                          - name
+                        type: object
+                      type: array
+                    envFrom:
+                      items:
+                        properties:
+                          configMapRef:
+                            properties:
+                              name:
+                                type: string
+                              optional:
+                                type: boolean
+                            type: object
+                          prefix:
+                            type: string
+                          secretRef:
+                            properties:
+                              name:
+                                type: string
+                              optional:
+                                type: boolean
+                            type: object
+                        type: object
+                      type: array
+                    ingresses:
+                      items:
+                        properties:
+                          authentication:
+                            properties:
+                              type:
+                                default: session
+                                pattern: ^(none|session)$
+                                type: string
+                            type: object
+                          changeOrigin:
+                            type: boolean
+                          headers:
+                            items:
+                              properties:
+                                name:
+                                  type: string
+                                value:
+                                  type: string
+                              required:
+                                - name
+                              type: object
+                            type: array
+                          host:
+                            type: string
+                          name:
+                            type: string
+                          path:
+                            type: string
+                          port:
+                            type: integer
+                          protocol:
+                            type: string
+                          secure:
+                            type: boolean
+                        required:
+                          - name
+                        type: object
+                      type: array
+                    initContainers:
+                      items:
+                        properties:
+                          name:
+                            type: string
+                        required:
+                          - name
+                        type: object
+                        x-kubernetes-preserve-unknown-fields: true
+                      type: array
+                    namespaces:
+                      properties:
+                        budget:
+                          type: string
+                        limits:
+                          properties:
+                            default:
+                              properties:
+                                cpu:
+                                  type: string
+                                memory:
+                                  type: string
+                              type: object
+                            defaultRequest:
+                              properties:
+                                cpu:
+                                  type: string
+                                memory:
+                                  type: string
+                              type: object
+                            max:
+                              properties:
+                                cpu:
+                                  type: string
+                                memory:
+                                  type: string
+                              type: object
+                            min:
+                              properties:
+                                cpu:
+                                  type: string
+                                memory:
+                                  type: string
+                              type: object
+                          type: object
+                        role:
+                          type: string
+                        secondary:
+                          items:
+                            properties:
+                              budget:
+                                type: string
+                              limits:
+                                properties:
+                                  default:
+                                    properties:
+                                      cpu:
+                                        type: string
+                                      memory:
+                                        type: string
+                                    type: object
+                                  defaultRequest:
+                                    properties:
+                                      cpu:
+                                        type: string
+                                      memory:
+                                        type: string
+                                    type: object
+                                  max:
+                                    properties:
+                                      cpu:
+                                        type: string
+                                      memory:
+                                        type: string
+                                    type: object
+                                  min:
+                                    properties:
+                                      cpu:
+                                        type: string
+                                      memory:
+                                        type: string
+                                    type: object
+                                type: object
+                              name:
+                                type: string
+                              role:
+                                type: string
+                              security:
+                                properties:
+                                  policy:
+                                    enum:
+                                      - restricted
+                                      - baseline
+                                      - privileged
+                                      - nonroot
+                                      - anyuid
+                                      - custom
+                                    type: string
+                                type: object
+                            required:
+                              - name
+                            type: object
+                          type: array
+                        security:
+                          properties:
+                            policy:
+                              enum:
+                                - restricted
+                                - baseline
+                                - privileged
+                                - nonroot
+                                - anyuid
+                                - custom
+                              type: string
+                            rules:
+                              properties:
+                                action:
+                                  default: enforce
+                                  enum:
+                                    - enforce
+                                    - audit
+                                  type: string
+                                exclude:
+                                  items:
+                                    type: string
+                                  type: array
+                              type: object
+                            token:
+                              properties:
+                                enabled:
+                                  default: true
+                                  type: boolean
+                              type: object
+                          type: object
+                      type: object
+                    objects:
+                      items:
+                        type: object
+                        x-kubernetes-preserve-unknown-fields: true
+                      type: array
+                    patches:
+                      type: object
+                      x-kubernetes-preserve-unknown-fields: true
+                    resources:
+                      properties:
+                        memory:
+                          type: string
+                        storage:
+                          type: string
+                        volume:
+                          properties:
+                            name:
+                              type: string
+                            subPath:
+                              type: string
+                          required:
+                            - name
+                          type: object
+                      type: object
+                    volumeMounts:
+                      items:
+                        properties:
+                          mountPath:
+                            type: string
+                          mountPropagation:
+                            type: string
+                          name:
+                            type: string
+                          readOnly:
+                            type: boolean
+                          subPath:
+                            type: string
+                          subPathExpr:
+                            type: string
+                        required:
+                          - name
+                          - mountPath
+                        type: object
+                      type: array
+                    volumes:
+                      items:
+                        properties:
+                          name:
+                            type: string
+                        required:
+                          - name
+                        type: object
+                        x-kubernetes-preserve-unknown-fields: true
+                      type: array
+                  type: object
+                tags:
+                  items:
+                    type: string
+                  type: array
+                title:
+                  type: string
+                url:
+                  type: string
+                vendor:
+                  type: string
+                version:
+                  type: string
+                workshop:
+                  properties:
+                    files:
+                      items:
+                        oneOf:
+                          - required:
+                              - git
+                          - required:
+                              - hg
+                          - required:
+                              - http
+                          - required:
+                              - image
+                          - required:
+                              - imgpkgBundle
+                          - required:
+                              - githubRelease
+                          - required:
+                              - helmChart
+                          - required:
+                              - inline
+                          - required:
+                              - directory
+                        properties:
+                          directory:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          excludePaths:
+                            items:
+                              type: string
+                            type: array
+                          git:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          githubRelease:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          helmChart:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          hg:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          http:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          image:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          imgpkgBundle:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          includePaths:
+                            items:
+                              type: string
+                            type: array
+                          inline:
+                            properties:
+                              paths:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                              pathsFrom:
+                                items:
+                                  properties:
+                                    secretRef:
+                                      properties:
+                                        directoryPath:
+                                          type: string
+                                        name:
+                                          type: string
+                                      required:
+                                        - name
+                                      type: object
+                                  required:
+                                    - secretRef
+                                  type: object
+                                type: array
+                            type: object
+                          legalPaths:
+                            items:
+                              type: string
+                            type: array
+                          newRootPath:
+                            type: string
+                          path:
+                            default: .
+                            type: string
+                        type: object
+                      type: array
+                    image:
+                      type: string
+                    packages:
+                      items:
+                        properties:
+                          files:
+                            items:
+                              oneOf:
+                                - required:
+                                    - git
+                                - required:
+                                    - hg
+                                - required:
+                                    - http
+                                - required:
+                                    - image
+                                - required:
+                                    - imgpkgBundle
+                                - required:
+                                    - githubRelease
+                                - required:
+                                    - helmChart
+                                - required:
+                                    - inline
+                                - required:
+                                    - directory
+                              properties:
+                                directory:
+                                  type: object
+                                  x-kubernetes-preserve-unknown-fields: true
+                                excludePaths:
+                                  items:
+                                    type: string
+                                  type: array
+                                git:
+                                  type: object
+                                  x-kubernetes-preserve-unknown-fields: true
+                                githubRelease:
+                                  type: object
+                                  x-kubernetes-preserve-unknown-fields: true
+                                helmChart:
+                                  type: object
+                                  x-kubernetes-preserve-unknown-fields: true
+                                hg:
+                                  type: object
+                                  x-kubernetes-preserve-unknown-fields: true
+                                http:
+                                  type: object
+                                  x-kubernetes-preserve-unknown-fields: true
+                                image:
+                                  type: object
+                                  x-kubernetes-preserve-unknown-fields: true
+                                imgpkgBundle:
+                                  type: object
+                                  x-kubernetes-preserve-unknown-fields: true
+                                includePaths:
+                                  items:
+                                    type: string
+                                  type: array
+                                inline:
+                                  properties:
+                                    paths:
+                                      additionalProperties:
+                                        type: string
+                                      type: object
+                                      x-kubernetes-preserve-unknown-fields: true
+                                    pathsFrom:
+                                      items:
+                                        properties:
+                                          secretRef:
+                                            properties:
+                                              directoryPath:
+                                                type: string
+                                              name:
+                                                type: string
+                                            required:
+                                              - name
+                                            type: object
+                                        required:
+                                          - secretRef
+                                        type: object
+                                      type: array
+                                  type: object
+                                legalPaths:
+                                  items:
+                                    type: string
+                                  type: array
+                                newRootPath:
+                                  type: string
+                                path:
+                                  default: .
+                                  type: string
+                              type: object
+                            type: array
+                          name:
+                            type: string
+                        required:
+                          - name
+                          - files
+                        type: object
+                      type: array
+                  type: object
+              required:
+                - title
+                - description
+              type: object
+            status:
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+          type: object
+      served: true
+      storage: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations: {}
+  name: workshopallocations.training.educates.dev
+spec:
+  group: training.educates.dev
+  names:
+    categories:
+      - educates
+      - educates-training
+    kind: WorkshopAllocation
+    plural: workshopallocations
+    singular: workshopallocation
+  scope: Cluster
+  versions:
+    - additionalPrinterColumns:
+        - description: The name of the workshop environment.
+          jsonPath: .spec.environment.name
+          name: Environment
+          priority: 0
+          type: string
+        - description: The name of the workshop session.
+          jsonPath: .spec.session.name
+          name: Session
+          priority: 0
+          type: string
+        - description: Status of workshop allocation.
+          jsonPath: .status.educates.phase
+          name: Status
+          priority: 0
+          type: string
+        - description: Status message.
+          jsonPath: .status.educates.message
+          name: Message
+          priority: 0
+          type: string
+      name: v1beta1
+      schema:
+        openAPIV3Schema:
+          properties:
+            spec:
+              properties:
+                environment:
+                  properties:
+                    name:
+                      type: string
+                  required:
+                    - name
+                  type: object
+                session:
+                  properties:
+                    name:
+                      type: string
+                    user:
+                      type: string
+                  required:
+                    - name
+                    - user
+                  type: object
+              required:
+                - environment
+                - session
+              type: object
+            status:
+              properties:
+                educates:
+                  properties:
+                    message:
+                      type: string
+                    phase:
+                      type: string
+                  type: object
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+          type: object
+      served: true
+      storage: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations: {}
+  name: workshopenvironments.training.educates.dev
+spec:
+  group: training.educates.dev
+  names:
+    categories:
+      - educates
+      - educates-training
+    kind: WorkshopEnvironment
+    plural: workshopenvironments
+    singular: workshopenvironment
+  scope: Cluster
+  versions:
+    - additionalPrinterColumns:
+        - description: The name of the workshop definition.
+          jsonPath: .spec.workshop.name
+          name: Workshop
+          priority: 0
+          type: string
+        - description: URL for further information on the workshop.
+          jsonPath: .status.educates.workshop.spec.url
+          name: URL
+          priority: 0
+          type: string
+        - description: Status of workshop environment deployment.
+          jsonPath: .status.educates.phase
+          name: Status
+          priority: 0
+          type: string
+        - description: Status message.
+          jsonPath: .status.educates.message
+          name: Message
+          priority: 0
+          type: string
+      name: v1beta1
+      schema:
+        openAPIV3Schema:
+          properties:
+            spec:
+              properties:
+                analytics:
+                  properties:
+                    amplitude:
+                      properties:
+                        trackingId:
+                          type: string
+                      required:
+                        - trackingId
+                      type: object
+                    clarity:
+                      properties:
+                        trackingId:
+                          type: string
+                      required:
+                        - trackingId
+                      type: object
+                    google:
+                      properties:
+                        trackingId:
+                          type: string
+                      required:
+                        - trackingId
+                      type: object
+                  type: object
+                cookies:
+                  properties:
+                    domain:
+                      type: string
+                  type: object
+                environment:
+                  properties:
+                    objects:
+                      items:
+                        type: object
+                        x-kubernetes-preserve-unknown-fields: true
+                      type: array
+                    secrets:
+                      items:
+                        properties:
+                          name:
+                            type: string
+                          namespace:
+                            type: string
+                        required:
+                          - namespace
+                          - name
+                        type: object
+                      type: array
+                  type: object
+                registry:
+                  properties:
+                    host:
+                      type: string
+                    namespace:
+                      type: string
+                  required:
+                    - host
+                  type: object
+                request:
+                  properties:
+                    enabled:
+                      type: boolean
+                    namespaces:
+                      items:
+                        type: string
+                      type: array
+                    token:
+                      type: string
+                  required:
+                    - enabled
+                  type: object
+                session:
+                  properties:
+                    env:
+                      items:
+                        properties:
+                          name:
+                            type: string
+                          value:
+                            type: string
+                        required:
+                          - name
+                        type: object
+                      type: array
+                    ingress:
+                      properties:
+                        class:
+                          type: string
+                        domain:
+                          type: string
+                        protocol:
+                          type: string
+                        secret:
+                          type: string
+                      type: object
+                    password:
+                      type: string
+                    username:
+                      type: string
+                  type: object
+                theme:
+                  properties:
+                    name:
+                      type: string
+                  type: object
+                workshop:
+                  properties:
+                    name:
+                      type: string
+                  required:
+                    - name
+                  type: object
+              required:
+                - workshop
+              type: object
+            status:
+              properties:
+                educates:
+                  properties:
+                    capacity:
+                      type: integer
+                    initial:
+                      type: integer
+                    message:
+                      type: string
+                    namespace:
+                      type: string
+                    phase:
+                      type: string
+                    reserved:
+                      type: integer
+                    secrets:
+                      properties:
+                        ingress:
+                          items:
+                            type: string
+                          type: array
+                        registry:
+                          items:
+                            type: string
+                          type: array
+                      type: object
+                    workshop:
+                      properties:
+                        generation:
+                          type: integer
+                        name:
+                          type: string
+                        spec:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        uid:
+                          type: string
+                      required:
+                        - name
+                        - uid
+                        - generation
+                        - spec
+                      type: object
+                  type: object
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+          type: object
+      served: true
+      storage: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations: {}
+  name: workshoprequests.training.educates.dev
+spec:
+  group: training.educates.dev
+  names:
+    categories:
+      - educates
+      - educates-training
+    kind: WorkshopRequest
+    plural: workshoprequests
+    singular: workshoprequest
+  scope: Namespaced
+  versions:
+    - additionalPrinterColumns:
+        - description: The URL to access the workshop.
+          jsonPath: .status.educates.url
+          name: URL
+          priority: 0
+          type: string
+        - description: The username to access the workshop.
+          jsonPath: .status.educates.username
+          name: Username
+          priority: 0
+          type: string
+        - description: The password to access the workshop.
+          jsonPath: .status.educates.password
+          name: Password
+          priority: 0
+          type: string
+        - description: Status of workshop request.
+          jsonPath: .status.educates.phase
+          name: Status
+          priority: 0
+          type: string
+      name: v1beta1
+      schema:
+        openAPIV3Schema:
+          properties:
+            spec:
+              properties:
+                environment:
+                  properties:
+                    name:
+                      type: string
+                    token:
+                      type: string
+                  required:
+                    - name
+                  type: object
+              required:
+                - environment
+              type: object
+            status:
+              properties:
+                educates:
+                  properties:
+                    password:
+                      type: string
+                    phase:
+                      type: string
+                    session:
+                      properties:
+                        apiVersion:
+                          type: string
+                        kind:
+                          type: string
+                        name:
+                          type: string
+                        uid:
+                          type: string
+                      type: object
+                    url:
+                      type: string
+                    username:
+                      type: string
+                  type: object
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+          type: object
+      served: true
+      storage: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations: {}
+  name: workshopsessions.training.educates.dev
+spec:
+  group: training.educates.dev
+  names:
+    categories:
+      - educates
+      - educates-training
+    kind: WorkshopSession
+    plural: workshopsessions
+    singular: workshopsession
+  scope: Cluster
+  versions:
+    - additionalPrinterColumns:
+        - description: The URL to access the workshop.
+          jsonPath: .status.educates.url
+          name: URL
+          priority: 0
+          type: string
+        - description: The username to access the workshop.
+          jsonPath: .spec.session.username
+          name: Username
+          priority: 0
+          type: string
+        - description: The password to access the workshop.
+          jsonPath: .spec.session.password
+          name: Password
+          priority: 0
+          type: string
+        - description: The status of the workshop session.
+          jsonPath: .status.educates.phase
+          name: Status
+          priority: 0
+          type: string
+        - description: Status message.
+          jsonPath: .status.educates.message
+          name: Message
+          priority: 0
+          type: string
+      name: v1beta1
+      schema:
+        openAPIV3Schema:
+          properties:
+            spec:
+              properties:
+                analytics:
+                  properties:
+                    amplitude:
+                      properties:
+                        trackingId:
+                          type: string
+                      required:
+                        - trackingId
+                      type: object
+                    clarity:
+                      properties:
+                        trackingId:
+                          type: string
+                      required:
+                        - trackingId
+                      type: object
+                    google:
+                      properties:
+                        trackingId:
+                          type: string
+                      required:
+                        - trackingId
+                      type: object
+                  type: object
+                environment:
+                  properties:
+                    name:
+                      type: string
+                  required:
+                    - name
+                  type: object
+                portal:
+                  properties:
+                    name:
+                      type: string
+                    url:
+                      type: string
+                  required:
+                    - name
+                    - url
+                  type: object
+                request:
+                  properties:
+                    apiVersion:
+                      type: string
+                    kind:
+                      type: string
+                    name:
+                      type: string
+                    namespace:
+                      type: string
+                    uid:
+                      type: string
+                  type: object
+                session:
+                  properties:
+                    config:
+                      properties:
+                        password:
+                          type: string
+                      type: object
+                    env:
+                      items:
+                        properties:
+                          name:
+                            type: string
+                          value:
+                            type: string
+                        required:
+                          - name
+                        type: object
+                      type: array
+                    id:
+                      type: string
+                    ingress:
+                      properties:
+                        class:
+                          type: string
+                        domain:
+                          type: string
+                        secret:
+                          type: string
+                      type: object
+                    password:
+                      type: string
+                    username:
+                      type: string
+                  required:
+                    - id
+                  type: object
+                workshop:
+                  properties:
+                    name:
+                      type: string
+                  required:
+                    - name
+                  type: object
+              required:
+                - environment
+              type: object
+            status:
+              properties:
+                educates:
+                  properties:
+                    message:
+                      type: string
+                    phase:
+                      type: string
+                    sshd:
+                      properties:
+                        enabled:
+                          type: boolean
+                        tunnel:
+                          properties:
+                            enabled:
+                              type: boolean
+                          type: object
+                      required:
+                        - enabled
+                      type: object
+                    url:
+                      type: string
+                    user:
+                      type: string
+                  type: object
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+          type: object
+      served: true
+      storage: true
