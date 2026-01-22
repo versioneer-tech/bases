@@ -56,59 +56,59 @@ stringData:
       name: debian-base-image
     - image: index.docker.io/library/docker@sha256:aa3df78ecf320f5fafdce71c659f1629e96e9de0968305fe1de670e0ca9176ce
       name: docker-in-docker
-    - image: index.docker.io/rancher/k3s@sha256:2713528633c2d4ebebd8efc230aae45e925843b7bfd30ce6a99eabc9b2dbb469
-      name: rancher-k3s-v1.27
-    - image: index.docker.io/rancher/k3s@sha256:2006d64b91f174717ef251ad5da83464fefd0e0acb9e0104bf0406a45b89050f
-      name: rancher-k3s-v1.28
-    - image: index.docker.io/rancher/k3s@sha256:4c448f219e2296ad15317665a80c9923f95783160207b9b972c1ec8365cdbe8f
-      name: rancher-k3s-v1.29
-    - image: index.docker.io/rancher/k3s@sha256:09e019280cdc89d038644f1656ac7f2aed98807bd97c20e2dc1b5b9f534a0718
-      name: rancher-k3s-v1.30
-    - image: index.docker.io/loftsh/vcluster@sha256:8a5a517af259461fb1b19aaf2826753b136799f6137ff9b342ef787fa3cec013
+    - image: ghcr.io/loft-sh/kubernetes@sha256:68bcce6ac12a75d54402a08c1c9770397f8858cb3f240378b5c1cc2b985e2451
+      name: loftsh-kubernetes-v1.31
+    - image: ghcr.io/loft-sh/kubernetes@sha256:210591bca43462aa5cbe340dba124d36458d6b269d041a2e3add4b0ddd6e16d5
+      name: loftsh-kubernetes-v1.32
+    - image: ghcr.io/loft-sh/kubernetes@sha256:47a6cc7a605e29018e504ef268829ac002364f685d2bdb4a38336b15cd54dabc
+      name: loftsh-kubernetes-v1.33
+    - image: ghcr.io/loft-sh/kubernetes@sha256:2c5c4154208cc566085df4c16744eeec8b4e155b71168566e7be654c80dcf959
+      name: loftsh-kubernetes-v1.34
+    - image: ghcr.io/loft-sh/vcluster-oss@sha256:85904d0387426d0804da993162c89d9da8c3a7db51b2cb46d313ebfe65591636
       name: loftsh-vcluster
-    - image: ghcr.io/educates/educates-session-manager@sha256:1d4962e37e471e490c9e611a9550e755b36fd512eca6e95b75ed6d26810afc0b
+    - image: ghcr.io/educates/educates-session-manager@sha256:315a616955d2ddae9905f5e513927315fbcaa8d2b68db44347ecbeab85e92521
       name: session-manager
-    - image: ghcr.io/educates/educates-training-portal@sha256:ad8568c12eca9ed612773eec21c206477714e98f2c406e6da832f072b9dba8b0
+    - image: ghcr.io/educates/educates-training-portal@sha256:b70286d33bfe60091f2e32fd8c18b48dec097682b1e60db8eb8d799358924450
       name: training-portal
-    - image: ghcr.io/educates/educates-docker-registry@sha256:1beda027a9a6cd3e5804c7eb0b4a06b017c653d8cdb247e4a468087f21f8bcff
+    - image: ghcr.io/educates/educates-docker-registry@sha256:d287f1aa35683e76163c1909236239f984ee3f3c4ff8d2ed599337e42fecbf43
       name: docker-registry
-    - image: ghcr.io/educates/educates-pause-container@sha256:9c1994329d727fb9191fbd7d079d86c32d0a480090c9fc2766926e1879556395
+    - image: ghcr.io/educates/educates-pause-container@sha256:4000083acd4664b3905af34111a8271c3330dcce7bf1f7e3232dd34a12d86c78
       name: pause-container
-    - image: ghcr.io/educates/educates-base-environment@sha256:f5450978a161f725329b179b28b04b492973e7bc2c30c6fbb820a43876f56608
+    - image: ghcr.io/educates/educates-base-environment@sha256:e1422745b3b2473704026d0b5808dbd2c268d23adda9adec3d21a62e0aeacb40
       name: base-environment
-    - image: ghcr.io/educates/educates-jdk8-environment@sha256:0589012a01a9ef1284944ce0a19c1dc0dd0e6c410a0a2793626c0a232577e380
+    - image: ghcr.io/educates/educates-jdk8-environment@sha256:38cc4d8b48b4e99bc0ee47125fb85864a9a403df146724527d01303f7cd4b078
       name: jdk8-environment
-    - image: ghcr.io/educates/educates-jdk11-environment@sha256:15e512b6203f7d6eebbc101d8221dcca210b1a24723d6f10529c6d341304c44a
+    - image: ghcr.io/educates/educates-jdk11-environment@sha256:99bf39cdc11b72338b182c117856998a807ca948773d432eae044ed1a88c264d
       name: jdk11-environment
-    - image: ghcr.io/educates/educates-jdk17-environment@sha256:3ee54057c5b6fe4a6d62c7660601eafb2eb8fb890a1ce31cb2568db8ae352c1e
+    - image: ghcr.io/educates/educates-jdk17-environment@sha256:4e150ae73ad68cab6811a97d04be172e927786c4ddba52b6c8216fc97f9eb202
       name: jdk17-environment
-    - image: ghcr.io/educates/educates-jdk21-environment@sha256:e5621d0f4cecb9edfda9ab94d127ae904babf25a306808104f260ced9a843cb3
+    - image: ghcr.io/educates/educates-jdk21-environment@sha256:ed4f17410ba869f289a8881fbabe40c0a5fb1aff548a7128d7f2c3fb18c8108e
       name: jdk21-environment
-    - image: ghcr.io/educates/educates-conda-environment@sha256:4fd9db80cf3a1497f6161cee422cf05aa3e4c4ffbd9c000e23510544915b8b48
+    - image: ghcr.io/educates/educates-conda-environment@sha256:032573e1aa4a496fc6122b79a72704fb88dae421bc46e996bd46c65ddb17b2c4
       name: conda-environment
-    - image: ghcr.io/educates/educates-secrets-manager@sha256:6de14a95ec141e2008754dfa64171c8113db479d50d0aad1d4a8b0cafff82953
+    - image: ghcr.io/educates/educates-secrets-manager@sha256:a9ecfef6e42fd59b5647ef76bdc70dc7b176d6be2886727746ee6ec59d6c321a
       name: secrets-manager
-    - image: ghcr.io/educates/educates-tunnel-manager@sha256:3ace6dbe1953ca485d6c92d6ca3d0ec3760126154169d85a70826fb9bddd933f
+    - image: ghcr.io/educates/educates-tunnel-manager@sha256:8f4d997063084dd5b3df2dd2407184ab54daef7872241bbaccb3ffae16ec018c
       name: tunnel-manager
-    - image: ghcr.io/educates/educates-image-cache@sha256:974d0c5f6a92fe8e0ff839680e4dc3e9570390f2f61d32d488fb8bacd6bb050e
+    - image: ghcr.io/educates/educates-image-cache@sha256:2168c43378c691d876e4779268f13dc36d3d86bd5abba70a0c802c72be0e9402
       name: image-cache
-    - image: ghcr.io/educates/educates-assets-server@sha256:2a7162091b6104e3956e931dcad6b9f2976fbfd924419cf7e840f1ea7667f9af
+    - image: ghcr.io/educates/educates-assets-server@sha256:41dcdd384425dace55d84165fe7f320bf231452a40a97d50290e2969211c91cb
       name: assets-server
-    - image: ghcr.io/educates/educates-lookup-service@sha256:9534ae921a37aef2dc6affd8caa1b1a99eec249a7f3d43353e0b73e670d1ed31
+    - image: ghcr.io/educates/educates-lookup-service@sha256:de9bd58865f76c6933bbbd8d1d084482c791ff76a1a6b614c6f912be5e6c3d30
       name: lookup-service
     - image: index.docker.io/library/debian@sha256:25095ed790e32ed43236eb0c793a9959deda9d623bd527aa44a11d51c371397f
       name: debian-base-image
     - image: index.docker.io/library/docker@sha256:aa3df78ecf320f5fafdce71c659f1629e96e9de0968305fe1de670e0ca9176ce
       name: docker-in-docker
-    - image: index.docker.io/rancher/k3s@sha256:2713528633c2d4ebebd8efc230aae45e925843b7bfd30ce6a99eabc9b2dbb469
-      name: rancher-k3s-v1.27
-    - image: index.docker.io/rancher/k3s@sha256:2006d64b91f174717ef251ad5da83464fefd0e0acb9e0104bf0406a45b89050f
-      name: rancher-k3s-v1.28
-    - image: index.docker.io/rancher/k3s@sha256:4c448f219e2296ad15317665a80c9923f95783160207b9b972c1ec8365cdbe8f
-      name: rancher-k3s-v1.29
-    - image: index.docker.io/rancher/k3s@sha256:09e019280cdc89d038644f1656ac7f2aed98807bd97c20e2dc1b5b9f534a0718
-      name: rancher-k3s-v1.30
-    - image: index.docker.io/loftsh/vcluster@sha256:8a5a517af259461fb1b19aaf2826753b136799f6137ff9b342ef787fa3cec013
+    - image: ghcr.io/loft-sh/kubernetes@sha256:68bcce6ac12a75d54402a08c1c9770397f8858cb3f240378b5c1cc2b985e2451
+      name: loftsh-kubernetes-v1.31
+    - image: ghcr.io/loft-sh/kubernetes@sha256:210591bca43462aa5cbe340dba124d36458d6b269d041a2e3add4b0ddd6e16d5
+      name: loftsh-kubernetes-v1.32
+    - image: ghcr.io/loft-sh/kubernetes@sha256:47a6cc7a605e29018e504ef268829ac002364f685d2bdb4a38336b15cd54dabc
+      name: loftsh-kubernetes-v1.33
+    - image: ghcr.io/loft-sh/kubernetes@sha256:2c5c4154208cc566085df4c16744eeec8b4e155b71168566e7be654c80dcf959
+      name: loftsh-kubernetes-v1.34
+    - image: ghcr.io/loft-sh/vcluster-oss@sha256:85904d0387426d0804da993162c89d9da8c3a7db51b2cb46d313ebfe65591636
       name: loftsh-vcluster
     lookupService:
       enabled: false
@@ -729,7 +729,7 @@ spec:
     spec:
       automountServiceAccountToken: false
       containers:
-        - image: ghcr.io/educates/educates-secrets-manager@sha256:6de14a95ec141e2008754dfa64171c8113db479d50d0aad1d4a8b0cafff82953
+        - image: ghcr.io/educates/educates-secrets-manager@sha256:a9ecfef6e42fd59b5647ef76bdc70dc7b176d6be2886727746ee6ec59d6c321a
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -1569,7 +1569,7 @@ spec:
         app: image-puller
     spec:
       containers:
-        - image: ghcr.io/educates/educates-pause-container@sha256:9c1994329d727fb9191fbd7d079d86c32d0a480090c9fc2766926e1879556395
+        - image: ghcr.io/educates/educates-pause-container@sha256:4000083acd4664b3905af34111a8271c3330dcce7bf1f7e3232dd34a12d86c78
           imagePullPolicy: IfNotPresent
           name: pause
           securityContext:
@@ -1580,12 +1580,12 @@ spec:
       initContainers:
         - command:
             - /bin/true
-          image: ghcr.io/educates/educates-training-portal@sha256:ad8568c12eca9ed612773eec21c206477714e98f2c406e6da832f072b9dba8b0
+          image: ghcr.io/educates/educates-training-portal@sha256:b70286d33bfe60091f2e32fd8c18b48dec097682b1e60db8eb8d799358924450
           imagePullPolicy: IfNotPresent
           name: training-portal
         - command:
             - /bin/true
-          image: ghcr.io/educates/educates-base-environment@sha256:f5450978a161f725329b179b28b04b492973e7bc2c30c6fbb820a43876f56608
+          image: ghcr.io/educates/educates-base-environment@sha256:e1422745b3b2473704026d0b5808dbd2c268d23adda9adec3d21a62e0aeacb40
           imagePullPolicy: IfNotPresent
           name: base-environment
       securityContext:
@@ -1612,7 +1612,7 @@ spec:
     spec:
       automountServiceAccountToken: false
       containers:
-        - image: ghcr.io/educates/educates-session-manager@sha256:1d4962e37e471e490c9e611a9550e755b36fd512eca6e95b75ed6d26810afc0b
+        - image: ghcr.io/educates/educates-session-manager@sha256:315a616955d2ddae9905f5e513927315fbcaa8d2b68db44347ecbeab85e92521
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -1698,49 +1698,49 @@ data:
       provider: generic
     imageVersions:
     - name: session-manager
-      image: ghcr.io/educates/educates-session-manager:3.4.0
+      image: ghcr.io/educates/educates-session-manager:3.5.1
     - name: training-portal
-      image: ghcr.io/educates/educates-training-portal:3.4.0
+      image: ghcr.io/educates/educates-training-portal:3.5.1
     - name: docker-registry
-      image: ghcr.io/educates/educates-docker-registry:3.4.0
+      image: ghcr.io/educates/educates-docker-registry:3.5.1
     - name: pause-container
-      image: ghcr.io/educates/educates-pause-container:3.4.0
+      image: ghcr.io/educates/educates-pause-container:3.5.1
     - name: base-environment
-      image: ghcr.io/educates/educates-base-environment:3.4.0
+      image: ghcr.io/educates/educates-base-environment:3.5.1
     - name: jdk8-environment
-      image: ghcr.io/educates/educates-jdk8-environment:3.4.0
+      image: ghcr.io/educates/educates-jdk8-environment:3.5.1
     - name: jdk11-environment
-      image: ghcr.io/educates/educates-jdk11-environment:3.4.0
+      image: ghcr.io/educates/educates-jdk11-environment:3.5.1
     - name: jdk17-environment
-      image: ghcr.io/educates/educates-jdk17-environment:3.4.0
+      image: ghcr.io/educates/educates-jdk17-environment:3.5.1
     - name: jdk21-environment
-      image: ghcr.io/educates/educates-jdk21-environment:3.4.0
+      image: ghcr.io/educates/educates-jdk21-environment:3.5.1
     - name: conda-environment
-      image: ghcr.io/educates/educates-conda-environment:3.4.0
+      image: ghcr.io/educates/educates-conda-environment:3.5.1
     - name: secrets-manager
-      image: ghcr.io/educates/educates-secrets-manager:3.4.0
+      image: ghcr.io/educates/educates-secrets-manager:3.5.1
     - name: tunnel-manager
-      image: ghcr.io/educates/educates-tunnel-manager:3.4.0
+      image: ghcr.io/educates/educates-tunnel-manager:3.5.1
     - name: image-cache
-      image: ghcr.io/educates/educates-image-cache:3.4.0
+      image: ghcr.io/educates/educates-image-cache:3.5.1
     - name: assets-server
-      image: ghcr.io/educates/educates-assets-server:3.4.0
+      image: ghcr.io/educates/educates-assets-server:3.5.1
     - name: lookup-service
-      image: ghcr.io/educates/educates-lookup-service:3.4.0
+      image: ghcr.io/educates/educates-lookup-service:3.5.1
     - name: debian-base-image
       image: debian:sid-20230502-slim
     - name: docker-in-docker
       image: docker:27.5.1-dind
-    - name: rancher-k3s-v1.27
-      image: rancher/k3s:v1.27.14-k3s1
-    - name: rancher-k3s-v1.28
-      image: rancher/k3s:v1.28.10-k3s1
-    - name: rancher-k3s-v1.29
-      image: rancher/k3s:v1.29.5-k3s1
-    - name: rancher-k3s-v1.30
-      image: rancher/k3s:v1.30.1-k3s1
+    - name: loftsh-kubernetes-v1.31
+      image: ghcr.io/loft-sh/kubernetes:v1.31.1
+    - name: loftsh-kubernetes-v1.32
+      image: ghcr.io/loft-sh/kubernetes:v1.32.1
+    - name: loftsh-kubernetes-v1.33
+      image: ghcr.io/loft-sh/kubernetes:v1.33.4
+    - name: loftsh-kubernetes-v1.34
+      image: ghcr.io/loft-sh/kubernetes:v1.34.0
     - name: loftsh-vcluster
-      image: loftsh/vcluster:0.18.1
+      image: ghcr.io/loft-sh/vcluster-oss:0.30.2
     clusterIngress:
       domain: ${CLUSTER_INGRESS_DOMAIN}
       class: ${CLUSTER_INGRESS_CLASS}
@@ -1775,49 +1775,49 @@ data:
           clusterSecurity:
             policyEngine: none
           imageVersions:
-          - image: ghcr.io/educates/educates-session-manager@sha256:1d4962e37e471e490c9e611a9550e755b36fd512eca6e95b75ed6d26810afc0b
+          - image: ghcr.io/educates/educates-session-manager@sha256:315a616955d2ddae9905f5e513927315fbcaa8d2b68db44347ecbeab85e92521
             name: session-manager
-          - image: ghcr.io/educates/educates-training-portal@sha256:ad8568c12eca9ed612773eec21c206477714e98f2c406e6da832f072b9dba8b0
+          - image: ghcr.io/educates/educates-training-portal@sha256:b70286d33bfe60091f2e32fd8c18b48dec097682b1e60db8eb8d799358924450
             name: training-portal
-          - image: ghcr.io/educates/educates-docker-registry@sha256:1beda027a9a6cd3e5804c7eb0b4a06b017c653d8cdb247e4a468087f21f8bcff
+          - image: ghcr.io/educates/educates-docker-registry@sha256:d287f1aa35683e76163c1909236239f984ee3f3c4ff8d2ed599337e42fecbf43
             name: docker-registry
-          - image: ghcr.io/educates/educates-pause-container@sha256:9c1994329d727fb9191fbd7d079d86c32d0a480090c9fc2766926e1879556395
+          - image: ghcr.io/educates/educates-pause-container@sha256:4000083acd4664b3905af34111a8271c3330dcce7bf1f7e3232dd34a12d86c78
             name: pause-container
-          - image: ghcr.io/educates/educates-base-environment@sha256:f5450978a161f725329b179b28b04b492973e7bc2c30c6fbb820a43876f56608
+          - image: ghcr.io/educates/educates-base-environment@sha256:e1422745b3b2473704026d0b5808dbd2c268d23adda9adec3d21a62e0aeacb40
             name: base-environment
-          - image: ghcr.io/educates/educates-jdk8-environment@sha256:0589012a01a9ef1284944ce0a19c1dc0dd0e6c410a0a2793626c0a232577e380
+          - image: ghcr.io/educates/educates-jdk8-environment@sha256:38cc4d8b48b4e99bc0ee47125fb85864a9a403df146724527d01303f7cd4b078
             name: jdk8-environment
-          - image: ghcr.io/educates/educates-jdk11-environment@sha256:15e512b6203f7d6eebbc101d8221dcca210b1a24723d6f10529c6d341304c44a
+          - image: ghcr.io/educates/educates-jdk11-environment@sha256:99bf39cdc11b72338b182c117856998a807ca948773d432eae044ed1a88c264d
             name: jdk11-environment
-          - image: ghcr.io/educates/educates-jdk17-environment@sha256:3ee54057c5b6fe4a6d62c7660601eafb2eb8fb890a1ce31cb2568db8ae352c1e
+          - image: ghcr.io/educates/educates-jdk17-environment@sha256:4e150ae73ad68cab6811a97d04be172e927786c4ddba52b6c8216fc97f9eb202
             name: jdk17-environment
-          - image: ghcr.io/educates/educates-jdk21-environment@sha256:e5621d0f4cecb9edfda9ab94d127ae904babf25a306808104f260ced9a843cb3
+          - image: ghcr.io/educates/educates-jdk21-environment@sha256:ed4f17410ba869f289a8881fbabe40c0a5fb1aff548a7128d7f2c3fb18c8108e
             name: jdk21-environment
-          - image: ghcr.io/educates/educates-conda-environment@sha256:4fd9db80cf3a1497f6161cee422cf05aa3e4c4ffbd9c000e23510544915b8b48
+          - image: ghcr.io/educates/educates-conda-environment@sha256:032573e1aa4a496fc6122b79a72704fb88dae421bc46e996bd46c65ddb17b2c4
             name: conda-environment
-          - image: ghcr.io/educates/educates-secrets-manager@sha256:6de14a95ec141e2008754dfa64171c8113db479d50d0aad1d4a8b0cafff82953
+          - image: ghcr.io/educates/educates-secrets-manager@sha256:a9ecfef6e42fd59b5647ef76bdc70dc7b176d6be2886727746ee6ec59d6c321a
             name: secrets-manager
-          - image: ghcr.io/educates/educates-tunnel-manager@sha256:3ace6dbe1953ca485d6c92d6ca3d0ec3760126154169d85a70826fb9bddd933f
+          - image: ghcr.io/educates/educates-tunnel-manager@sha256:8f4d997063084dd5b3df2dd2407184ab54daef7872241bbaccb3ffae16ec018c
             name: tunnel-manager
-          - image: ghcr.io/educates/educates-image-cache@sha256:974d0c5f6a92fe8e0ff839680e4dc3e9570390f2f61d32d488fb8bacd6bb050e
+          - image: ghcr.io/educates/educates-image-cache@sha256:2168c43378c691d876e4779268f13dc36d3d86bd5abba70a0c802c72be0e9402
             name: image-cache
-          - image: ghcr.io/educates/educates-assets-server@sha256:2a7162091b6104e3956e931dcad6b9f2976fbfd924419cf7e840f1ea7667f9af
+          - image: ghcr.io/educates/educates-assets-server@sha256:41dcdd384425dace55d84165fe7f320bf231452a40a97d50290e2969211c91cb
             name: assets-server
-          - image: ghcr.io/educates/educates-lookup-service@sha256:9534ae921a37aef2dc6affd8caa1b1a99eec249a7f3d43353e0b73e670d1ed31
+          - image: ghcr.io/educates/educates-lookup-service@sha256:de9bd58865f76c6933bbbd8d1d084482c791ff76a1a6b614c6f912be5e6c3d30
             name: lookup-service
           - image: index.docker.io/library/debian@sha256:25095ed790e32ed43236eb0c793a9959deda9d623bd527aa44a11d51c371397f
             name: debian-base-image
           - image: index.docker.io/library/docker@sha256:aa3df78ecf320f5fafdce71c659f1629e96e9de0968305fe1de670e0ca9176ce
             name: docker-in-docker
-          - image: index.docker.io/rancher/k3s@sha256:2713528633c2d4ebebd8efc230aae45e925843b7bfd30ce6a99eabc9b2dbb469
-            name: rancher-k3s-v1.27
-          - image: index.docker.io/rancher/k3s@sha256:2006d64b91f174717ef251ad5da83464fefd0e0acb9e0104bf0406a45b89050f
-            name: rancher-k3s-v1.28
-          - image: index.docker.io/rancher/k3s@sha256:4c448f219e2296ad15317665a80c9923f95783160207b9b972c1ec8365cdbe8f
-            name: rancher-k3s-v1.29
-          - image: index.docker.io/rancher/k3s@sha256:09e019280cdc89d038644f1656ac7f2aed98807bd97c20e2dc1b5b9f534a0718
-            name: rancher-k3s-v1.30
-          - image: index.docker.io/loftsh/vcluster@sha256:8a5a517af259461fb1b19aaf2826753b136799f6137ff9b342ef787fa3cec013
+          - image: ghcr.io/loft-sh/kubernetes@sha256:68bcce6ac12a75d54402a08c1c9770397f8858cb3f240378b5c1cc2b985e2451
+            name: loftsh-kubernetes-v1.31
+          - image: ghcr.io/loft-sh/kubernetes@sha256:210591bca43462aa5cbe340dba124d36458d6b269d041a2e3add4b0ddd6e16d5
+            name: loftsh-kubernetes-v1.32
+          - image: ghcr.io/loft-sh/kubernetes@sha256:47a6cc7a605e29018e504ef268829ac002364f685d2bdb4a38336b15cd54dabc
+            name: loftsh-kubernetes-v1.33
+          - image: ghcr.io/loft-sh/kubernetes@sha256:2c5c4154208cc566085df4c16744eeec8b4e155b71168566e7be654c80dcf959
+            name: loftsh-kubernetes-v1.34
+          - image: ghcr.io/loft-sh/vcluster-oss@sha256:85904d0387426d0804da993162c89d9da8c3a7db51b2cb46d313ebfe65591636
             name: loftsh-vcluster
           workshopSecurity:
             rulesEngine: none

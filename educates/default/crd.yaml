@@ -1438,11 +1438,6 @@ spec:
                               type: array
                             resources:
                               properties:
-                                k3s:
-                                  properties:
-                                    memory:
-                                      type: string
-                                  type: object
                                 syncer:
                                   properties:
                                     memory:
@@ -1450,6 +1445,33 @@ spec:
                                     storage:
                                       type: string
                                   type: object
+                              type: object
+                            services:
+                              properties:
+                                fromHost:
+                                  items:
+                                    properties:
+                                      from:
+                                        type: string
+                                      to:
+                                        type: string
+                                    required:
+                                      - from
+                                      - to
+                                    type: object
+                                  type: array
+                                fromVirtual:
+                                  items:
+                                    properties:
+                                      from:
+                                        type: string
+                                      to:
+                                        type: string
+                                    required:
+                                      - from
+                                      - to
+                                    type: object
+                                  type: array
                               type: object
                             version:
                               type: string
