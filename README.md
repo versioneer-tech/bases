@@ -18,7 +18,8 @@ Each component is published as a versioned, immutable package and can be reconci
 
 ### Repository layout
 
-Each component folder represents a deployable **Kustomize base**, optionally containing one or more **overlays**:
+Each top-level component directory is one published **OCI artifact boundary**.
+Overlays inside that directory are selected by Flux via `spec.path`:
 
 ```
 csi-rclone/
@@ -32,14 +33,18 @@ educates/
     kustomization.yaml # needs ${NAMESPACE} ${CLUSTER_INGRESS_DOMAIN} ${CLUSTER_INGRESS_CLASS} ${TLS_CERTIFICATE_REF_NAMESPACE} ${TLS_CERTIFICATE_REF_NAME}
 ```
 
-Each `kustomization.yaml` defines a shared label to identify its component:
-
+Each `kustomization.yaml` defines a shared label to identify its component.
 For example:
 
 ```yaml
-commonLabels:
-  bases.internal: csi-rclone
+labels:
+  - pairs:
+      bases.internal: educates
+    includeSelectors: true
 ```
+
+`csi-rclone` currently uses the legacy label value `bases.internal: csi-clone`
+because it is part of existing workload selectors.
 
 ## Consuming with Flux (**substitute** method)
 
@@ -136,6 +141,19 @@ Fetch an artifact locally and inspect its contents:
 flux pull artifact oci://ghcr.io/versioneer-tech/bases:csi-rclone-<sha12> --output out
 tree out
 ```
+
+### Regenerating Educates
+
+The reusable Educates base is generated in this repository, not in a consuming
+Flux repository:
+
+```bash
+./scripts/generate-educates.sh
+```
+
+The generator uses `educates/default/educates-config.yaml` and keeps Flux
+substitution placeholders such as `${NAMESPACE}`, `${CLUSTER_INGRESS_DOMAIN}`,
+and `${TLS_CERTIFICATE_REF_NAME}` in the generated manifests.
 
 ### Publishing (as OCI artifacts)
 

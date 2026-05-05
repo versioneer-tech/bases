@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# Copyright 2025, EOX (https://eox.at) and Versioneer (https://versioneer.at)
+# Copyright 2026, EOX (https://eox.at) and Versioneer (https://versioneer.at)
 # SPDX-License-Identifier: Apache-2.0
 
 IMAGE="${IMAGE:-ghcr.io/versioneer-tech/bases}"

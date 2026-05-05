@@ -1,0 +1,22 @@
+# Copyright 2025, EOX (https://eox.at) and Versioneer (https://versioneer.at)
+# SPDX-License-Identifier: Apache-2.0
+
+clusterInfrastructure:
+  provider: generic
+clusterIngress:
+  domain: ${CLUSTER_INGRESS_DOMAIN}
+  class: ${CLUSTER_INGRESS_CLASS}
+  tlsCertificateRef:
+    namespace: ${TLS_CERTIFICATE_REF_NAMESPACE}
+    name: ${TLS_CERTIFICATE_REF_NAME}
+clusterPackages:
+  contour:
+    enabled: false
+    settings: {}
+  kyverno:
+    enabled: false
+    settings: {}
+clusterSecurity:
+  policyEngine: none
+workshopSecurity:
+  rulesEngine: none
