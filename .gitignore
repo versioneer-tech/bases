@@ -1,29 +1,29 @@
 # Editor and local tool state
 .vscode*
-.code/
-.code-workspace
+#.code*
 .idea*
 *.swp
 *.swo
 *~
-site/
 
 # Environment files
 .env*
 .envrc
 
+# Kubernetes and ArgoCD local files
+.argocd/
+argocd.yaml
+k.yaml
+kubeconfig
+kubeconfig.yaml
+vcluster
+
 # TLS and secrets
 *.crt
 *.key
+*.pem
 
-# Python
-__pycache__/
-*.pyc
-.mypy_cache/
-.pytest_cache/
-.ruff_cache/
-.tox/
-build/
-dist/
-venv/
-.venv/
+# Binaries, generated local tools, and test output
+bin/
+dist/*
+!dist/install.yaml
