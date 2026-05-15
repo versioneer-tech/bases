@@ -1,0 +1,284 @@
+# Copyright 2026, EOX (https://eox.at) and Versioneer (https://versioneer.at)
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: lakefs-oss-contrib
+    control-plane: controller-manager
+  name: lakefs
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: lakefs-oss-contrib
+  name: lakefs-oss-contrib-controller-manager
+  namespace: lakefs
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: lakefs-oss-contrib
+  name: lakefs-oss-contrib-leader-election-role
+  namespace: lakefs
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: lakefs-oss-contrib-manager-role
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - pkg.internal
+    resources:
+      - lakefscredentials
+      - lakefsgroups
+      - lakefsrepositories
+      - lakefsrolebindings
+      - lakefsroles
+      - lakefsusers
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - pkg.internal
+    resources:
+      - lakefscredentials/finalizers
+      - lakefsgroups/finalizers
+      - lakefsrepositories/finalizers
+      - lakefsrolebindings/finalizers
+      - lakefsroles/finalizers
+      - lakefsusers/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - pkg.internal
+    resources:
+      - lakefscredentials/status
+      - lakefsgroups/status
+      - lakefsrepositories/status
+      - lakefsrolebindings/status
+      - lakefsroles/status
+      - lakefsusers/status
+    verbs:
+      - get
+      - patch
+      - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: lakefs-oss-contrib-metrics-auth-role
+rules:
+  - apiGroups:
+      - authentication.k8s.io
+    resources:
+      - tokenreviews
+    verbs:
+      - create
+  - apiGroups:
+      - authorization.k8s.io
+    resources:
+      - subjectaccessreviews
+    verbs:
+      - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: lakefs-oss-contrib-metrics-reader
+rules:
+  - nonResourceURLs:
+      - /metrics
+    verbs:
+      - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: lakefs-oss-contrib
+  name: lakefs-oss-contrib-leader-election-rolebinding
+  namespace: lakefs
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: lakefs-oss-contrib-leader-election-role
+subjects:
+  - kind: ServiceAccount
+    name: lakefs-oss-contrib-controller-manager
+    namespace: lakefs
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: lakefs-oss-contrib
+  name: lakefs-oss-contrib-manager-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: lakefs-oss-contrib-manager-role
+subjects:
+  - kind: ServiceAccount
+    name: lakefs-oss-contrib-controller-manager
+    namespace: lakefs
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: lakefs-oss-contrib-metrics-auth-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: lakefs-oss-contrib-metrics-auth-role
+subjects:
+  - kind: ServiceAccount
+    name: lakefs-oss-contrib-controller-manager
+    namespace: lakefs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: lakefs-oss-contrib
+    control-plane: controller-manager
+  name: lakefs-oss-contrib-controller-manager-metrics-service
+  namespace: lakefs
+spec:
+  ports:
+    - name: https
+      port: 8443
+      protocol: TCP
+      targetPort: 8443
+  selector:
+    app.kubernetes.io/name: lakefs-oss-contrib
+    control-plane: controller-manager
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: lakefs-oss-contrib
+    control-plane: controller-manager
+  name: lakefs-oss-contrib-controller-manager
+  namespace: lakefs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: lakefs-oss-contrib
+      control-plane: controller-manager
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: operator
+      labels:
+        app.kubernetes.io/name: lakefs-oss-contrib
+        control-plane: controller-manager
+    spec:
+      containers:
+        - args:
+            - --metrics-bind-address=:8443
+            - --leader-elect
+            - --health-probe-bind-address=:8081
+          command:
+            - /app
+          image: ghcr.io/versioneer-tech/lakefs-oss-contrib/operator:0.1.2
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          name: operator
+          ports:
+            - containerPort: 8081
+              name: health
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: 500m
+              memory: 128Mi
+            requests:
+              cpu: 10m
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          volumeMounts: []
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: lakefs-oss-contrib-controller-manager
+      terminationGracePeriodSeconds: 10
+      volumes: []

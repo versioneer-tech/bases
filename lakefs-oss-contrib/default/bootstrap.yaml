@@ -1,0 +1,123 @@
+# Copyright 2026, EOX (https://eox.at) and Versioneer (https://versioneer.at)
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: admin-credentials
+  namespace: lakefs
+type: Opaque
+stringData:
+  accessKeyId: ${LAKEFS_INSTALLATION_ACCESS_KEY_ID}
+  secretAccessKey: ${LAKEFS_INSTALLATION_SECRET_ACCESS_KEY}
+---
+apiVersion: pkg.internal/v1beta1
+kind: LakeFSUser
+metadata:
+  name: admin-user
+  namespace: lakefs
+spec:
+  externalId: ${LAKEFS_INSTALLATION_USER_NAME}
+  friendlyName: lakeFS Admin
+---
+apiVersion: pkg.internal/v1beta1
+kind: LakeFSCredential
+metadata:
+  name: admin-credentials
+  namespace: lakefs
+spec:
+  userRef:
+    name: admin-user
+  accessKeyId: ${LAKEFS_INSTALLATION_ACCESS_KEY_ID}
+  secretRef:
+    name: admin-credentials
+    key: secretAccessKey
+---
+apiVersion: pkg.internal/v1beta1
+kind: LakeFSRole
+metadata:
+  name: admin
+  namespace: lakefs
+spec:
+  description: Administrator
+  policies:
+    - name: admin
+      statement:
+        - effect: allow
+          action:
+            - fs:*
+            - auth:*
+            - ci:*
+            - retention:*
+            - branches:*
+          resource: "*"
+---
+apiVersion: pkg.internal/v1beta1
+kind: LakeFSRole
+metadata:
+  name: owner
+  namespace: lakefs
+spec:
+  description: Owner
+  policies:
+    - name: <REPOSITORY>-owner
+      statement:
+        - effect: allow
+          action:
+            - fs:*
+          resource: arn:lakefs:fs:::repository/<REPOSITORY>
+        - effect: allow
+          action:
+            - fs:*
+          resource: arn:lakefs:fs:::repository/<REPOSITORY>/branch/*
+        - effect: allow
+          action:
+            - fs:*
+          resource: arn:lakefs:fs:::repository/<REPOSITORY>/object/*
+        - effect: allow
+          action:
+            - fs:ListRepositories
+          resource: "*"
+---
+apiVersion: pkg.internal/v1beta1
+kind: LakeFSRole
+metadata:
+  name: viewer
+  namespace: lakefs
+spec:
+  description: Viewer
+  policies:
+    - name: <REPOSITORY>-viewer
+      statement:
+        - effect: allow
+          action:
+            - fs:ListObjects
+            - fs:ReadObject
+          resource: arn:lakefs:fs:::repository/<REPOSITORY>
+        - effect: allow
+          action:
+            - fs:ListObjects
+            - fs:ReadObject
+          resource: arn:lakefs:fs:::repository/<REPOSITORY>/branch/*
+        - effect: allow
+          action:
+            - fs:ListObjects
+            - fs:ReadObject
+          resource: arn:lakefs:fs:::repository/<REPOSITORY>/object/*
+        - effect: allow
+          action:
+            - fs:ListRepositories
+          resource: "*"
+---
+apiVersion: pkg.internal/v1beta1
+kind: LakeFSRoleBinding
+metadata:
+  name: admin-user-all
+  namespace: lakefs
+spec:
+  subject:
+    kind: LakeFSUser
+    name: admin-user
+  roleRef:
+    name: admin
+  repository: "*"

@@ -1,0 +1,161 @@
+# Copyright 2026, EOX (https://eox.at) and Versioneer (https://versioneer.at)
+# SPDX-License-Identifier: Apache-2.0
+
+---
+# Source: lakefs/templates/secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: lakefs
+  labels:
+    helm.sh/chart: lakefs-1.10.0
+    app: lakefs
+    app.kubernetes.io/name: lakefs
+    app.kubernetes.io/instance: lakefs
+    app.kubernetes.io/version: "1.84.0"
+    app.kubernetes.io/managed-by: Helm
+type: Opaque
+data: {}
+---
+# Source: lakefs/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lakefs
+data:
+  config.yaml:
+  |
+    logging:
+      level: INFO
+    stats:
+      enabled: false
+  
+    database:
+      type: local
+    blockstore:
+      type: s3
+      s3:
+        region: ${LAKEFS_BLOCKSTORE_REGION}
+        endpoint: ${LAKEFS_BLOCKSTORE_ENDPOINT}
+        discover_bucket_region: false
+        force_path_style: true
+  
+    auth:
+      ui_config:
+        rbac: simplified
+      api:
+        endpoint: http://lakefs-oss-contrib-auth-server.lakefs.svc/auth/v1
+  
+    installation:
+      user_name: ${LAKEFS_INSTALLATION_USER_NAME}
+      access_key_id: ${LAKEFS_INSTALLATION_ACCESS_KEY_ID}
+      secret_access_key: ${LAKEFS_INSTALLATION_SECRET_ACCESS_KEY}
+---
+# Source: lakefs/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: lakefs
+  labels:
+    helm.sh/chart: lakefs-1.10.0
+    app: lakefs
+    app.kubernetes.io/name: lakefs
+    app.kubernetes.io/instance: lakefs
+    app.kubernetes.io/version: "1.84.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    {}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: lakefs
+    app.kubernetes.io/name: lakefs
+    app.kubernetes.io/instance: lakefs
+---
+# Source: lakefs/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lakefs
+  labels:
+    helm.sh/chart: lakefs-1.10.0
+    app: lakefs
+    app.kubernetes.io/name: lakefs
+    app.kubernetes.io/instance: lakefs
+    app.kubernetes.io/version: "1.84.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lakefs
+      app.kubernetes.io/name: lakefs
+      app.kubernetes.io/instance: lakefs
+  template:
+    metadata:
+      annotations:
+        checksum/config: 69cf5128e0f67e14b9bff51cab6e010648ab5b797224f0a38369e38728c226cb
+      labels:
+        app: lakefs
+        app.kubernetes.io/name: lakefs
+        app.kubernetes.io/instance: lakefs
+    spec:
+      serviceAccountName: default
+      securityContext:
+        null
+      containers:
+        - name: lakefs
+          args: ["run", "--config", "/etc/lakefs/config.yaml"]
+          securityContext:
+            null
+          image: "treeverse/lakefs:1.81.0"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          readinessProbe:   
+            httpGet:
+              path: /_health
+              port: http
+          livenessProbe:                                                
+            httpGet:
+              path: /_health
+              port: http
+          resources:
+            {}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/lakefs/config.yaml
+              subPath: "config.yaml"
+              readOnly: true
+          env:
+            - name: LAKEFS_AUTH_ENCRYPT_SECRET_KEY
+              value: asdjfhjaskdhuioaweyuiorasdsjbaskcbkj
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_ACCESS_KEY_ID
+                  name: lakefs-blockstore
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_SECRET_ACCESS_KEY
+                  name: lakefs-blockstore
+        
+        
+        
+        
+      volumes:
+        
+        - name: config-volume
+          configMap:
+            name: lakefs
+            items:
+              - key: config.yaml
+                path: config.yaml

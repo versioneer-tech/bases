@@ -15,6 +15,7 @@ Each component is published as a versioned, immutable package and can be reconci
 
 - `csi-rclone`
 - `educates`
+- `lakefs-oss-contrib`
 
 ### Repository layout
 
@@ -31,6 +32,9 @@ csi-rclone/
 educates/
   default/
     kustomization.yaml # needs ${NAMESPACE} ${CLUSTER_INGRESS_DOMAIN} ${CLUSTER_INGRESS_CLASS} ${TLS_CERTIFICATE_REF_NAMESPACE} ${TLS_CERTIFICATE_REF_NAME}
+lakefs-oss-contrib/
+  default/
+    kustomization.yaml # needs ${LAKEFS_BLOCKSTORE_ACCESS_KEY_ID} ${LAKEFS_BLOCKSTORE_SECRET_ACCESS_KEY} ${LAKEFS_BLOCKSTORE_REGION} ${LAKEFS_BLOCKSTORE_ENDPOINT} ${LAKEFS_INSTALLATION_USER_NAME} ${LAKEFS_INSTALLATION_ACCESS_KEY_ID} ${LAKEFS_INSTALLATION_SECRET_ACCESS_KEY}
 ```
 
 Each `kustomization.yaml` defines a shared label to identify its component.
@@ -45,6 +49,21 @@ labels:
 
 `csi-rclone` currently uses the legacy label value `bases.internal: csi-clone`
 because it is part of existing workload selectors.
+
+The `lakefs-oss-contrib/default` base expects these substitutions:
+
+- `LAKEFS_BLOCKSTORE_ACCESS_KEY_ID`
+- `LAKEFS_BLOCKSTORE_SECRET_ACCESS_KEY`
+- `LAKEFS_BLOCKSTORE_REGION`
+- `LAKEFS_BLOCKSTORE_ENDPOINT`
+- `LAKEFS_INSTALLATION_USER_NAME`
+- `LAKEFS_INSTALLATION_ACCESS_KEY_ID`
+- `LAKEFS_INSTALLATION_SECRET_ACCESS_KEY`
+
+It bootstraps `admin-user` as a `LakeFSUser`, creates the matching
+`admin-credentials` `LakeFSCredential`, grants owner permissions on all repositories
+plus auth and repository CI management, and includes the default
+`admin`, `owner`, and `viewer` roles.
 
 ## Consuming with Flux (**substitute** method)
 
@@ -157,7 +176,7 @@ and `${TLS_CERTIFICATE_REF_NAME}` in the generated manifests.
 
 ### Publishing (as OCI artifacts)
 
-Use the script to detect changed components (folders that contain a `kustomization.yaml`) and push them as OCI artifacts tagged `<component>-<sha12>`:
+Use the script to detect changed configured components and push them as OCI artifacts tagged `<component>-<sha12>`:
 
 ```bash
 ./publish-bases.sh

@@ -1,0 +1,19 @@
+# Copyright 2026, EOX (https://eox.at) and Versioneer (https://versioneer.at)
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - blockstore-secret.yaml
+  - crd.yaml
+  - auth-server.yaml
+  - lakefs.yaml
+  - operator.yaml
+  - bootstrap.yaml
+
+namespace: lakefs
+
+labels:
+  - pairs:
+      bases.internal: lakefs-oss-contrib
+    includeSelectors: true

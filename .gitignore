@@ -1,6 +1,6 @@
 # Editor and local tool state
 .vscode*
-#.code*
+.code*
 .idea*
 *.swp
 *.swo

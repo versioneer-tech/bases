@@ -24,6 +24,11 @@ command -v git  >/dev/null || { echo "git not found"; exit 1; }
 ROOT_DIR="$(pwd)"
 COMMIT_SHA="$(git rev-parse HEAD)"
 SOURCE_URL="$(git config --get remote.origin.url || true)"
+COMPONENTS=(
+  csi-rclone
+  educates
+  lakefs-oss-contrib
+)
 
 if [[ -n "$SINCE_REF" ]]; then
   PREV="$SINCE_REF"
@@ -41,16 +46,17 @@ changed() {
   ! git diff --quiet "$PREV"..HEAD -- "$path"
 }
 
-while IFS= read -r -d '' dir; do
-  comp="$(basename "$dir")"
+for comp in "${COMPONENTS[@]}"; do
+  dir="./${comp}"
 
-    krel=""
+  krel=""
   if [[ -f "$dir/default/kustomization.yaml" ]]; then
     krel="default/kustomization.yaml"
   elif [[ -f "$dir/default/kustomization.yml" ]]; then
     krel="default/kustomization.yml"
   else
-      continue
+    echo "missing default kustomization for configured component: $comp" >&2
+    exit 1
   fi
 
   if ! changed "$dir"; then
@@ -75,4 +81,4 @@ while IFS= read -r -d '' dir; do
     popd >/dev/null
     echo "pushed ${REF}"
   fi
-done < <(find . -mindepth 1 -maxdepth 1 -type d -print0)
+done
