@@ -39,6 +39,14 @@ data:
         endpoint: ${LAKEFS_BLOCKSTORE_ENDPOINT}
         discover_bucket_region: false
         force_path_style: true
+    gateways:
+      s3:
+        region: ${LAKEFS_BLOCKSTORE_REGION}
+        domain_name: ${LAKEFS_S3_DOMAIN_NAME}
+    tls:
+      enabled: true
+      cert_file: /etc/lakefs/tls/tls.crt
+      key_file: /etc/lakefs/tls/tls.key
   
     auth:
       ui_config:
@@ -68,10 +76,14 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 80
-      targetPort: http
+    - port: 8000
+      targetPort: https
       protocol: TCP
-      name: http
+      name: s3
+    - port: 8443
+      targetPort: https
+      protocol: TCP
+      name: console
   selector:
     app: lakefs
     app.kubernetes.io/name: lakefs
@@ -116,23 +128,28 @@ spec:
           image: "treeverse/lakefs:1.81.0"
           imagePullPolicy: IfNotPresent
           ports:
-            - name: http
+            - name: https
               containerPort: 8000
               protocol: TCP
           readinessProbe:   
             httpGet:
+              scheme: HTTPS
               path: /_health
-              port: http
+              port: https
           livenessProbe:                                                
             httpGet:
+              scheme: HTTPS
               path: /_health
-              port: http
+              port: https
           resources:
             {}
           volumeMounts:
             - name: config-volume
               mountPath: /etc/lakefs/config.yaml
               subPath: "config.yaml"
+              readOnly: true
+            - name: tls
+              mountPath: /etc/lakefs/tls
               readOnly: true
           env:
             - name: LAKEFS_AUTH_ENCRYPT_SECRET_KEY
@@ -159,3 +176,6 @@ spec:
             items:
               - key: config.yaml
                 path: config.yaml
+        - name: tls
+          secret:
+            secretName: lakefs-tls
